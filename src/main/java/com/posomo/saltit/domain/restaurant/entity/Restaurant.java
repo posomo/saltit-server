@@ -3,8 +3,8 @@ package com.posomo.saltit.domain.restaurant.entity;
 import com.posomo.saltit.domain.restaurant.entity.core.entity.BaseEntity;
 import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantMenu;
 import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantTime;
+import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantInformation;
 import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantLocation;
-import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantMainMenuPriceRange;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +32,7 @@ public class Restaurant extends BaseEntity {
     private RestaurantLocation location;
 
     @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RestaurantMainMenuPriceRange priceRange;
+    private RestaurantInformation priceRange;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantMenu> menus = new ArrayList<>();
