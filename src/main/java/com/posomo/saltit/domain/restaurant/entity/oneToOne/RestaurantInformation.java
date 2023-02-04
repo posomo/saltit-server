@@ -12,10 +12,12 @@ import org.hibernate.annotations.Immutable;
 @Entity
 @Getter
 @Immutable
-public class RestaurantMainMenuPriceRange extends BaseEntity {
+public class RestaurantInformation extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
     private BigDecimal average;
+
+    private BigDecimal rating;
 
 }
