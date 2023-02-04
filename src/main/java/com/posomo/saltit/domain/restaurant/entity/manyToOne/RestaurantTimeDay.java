@@ -11,8 +11,8 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class RestaurantTimeDay extends BaseEntity {
 
-    @JoinColumn(name="restaurant_break_time_id")
-    @ManyToOne()
+    @JoinColumn(name="restaurant_time_id", referencedColumnName = "id")
+    @ManyToOne
     private RestaurantTime time;
     @Enumerated(value = EnumType.STRING)
     private Day day;

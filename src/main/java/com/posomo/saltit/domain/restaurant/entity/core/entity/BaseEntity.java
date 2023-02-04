@@ -10,5 +10,5 @@ import lombok.Getter;
 @Getter
 public abstract class BaseEntity {
     @Id
-    private UUID uuid;
+    protected UUID id;
 }
