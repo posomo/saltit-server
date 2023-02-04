@@ -32,7 +32,7 @@ public class Restaurant extends BaseEntity {
     private RestaurantLocation location;
 
     @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RestaurantInformation priceRange;
+    private RestaurantInformation information;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantMenu> menus = new ArrayList<>();
