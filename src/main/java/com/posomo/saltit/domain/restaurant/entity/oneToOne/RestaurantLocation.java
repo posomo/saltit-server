@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import java.math.BigDecimal;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class RestaurantLocation extends BaseEntity {
     @OneToOne
+    @MapsId
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 

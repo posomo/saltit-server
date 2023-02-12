@@ -1,9 +1,9 @@
 package com.posomo.saltit.domain.restaurant.entity.manyToOne;
 
-import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorColumn(name = "OPEN")
+@DiscriminatorValue("OPEN")
 public class RestaurantOpenTime extends RestaurantTime{
 }
