@@ -7,12 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import java.math.BigDecimal;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.Immutable;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Immutable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantInformation extends BaseEntity {
     @OneToOne
     @MapsId
@@ -22,4 +24,10 @@ public class RestaurantInformation extends BaseEntity {
 
     private BigDecimal rating;
 
+    @Builder
+    public RestaurantInformation(Restaurant restaurant, BigDecimal average, BigDecimal rating) {
+        this.restaurant = restaurant;
+        this.average = average;
+        this.rating = rating;
+    }
 }

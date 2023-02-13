@@ -4,18 +4,19 @@ import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.core.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import java.math.BigDecimal;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.NoArgsConstructor;
 
 
 @Entity
 @Getter
-@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantLocation extends BaseEntity {
     @OneToOne
     @MapsId
@@ -26,6 +27,17 @@ public class RestaurantLocation extends BaseEntity {
     private String roadAddress;
     @Column()
     private BigDecimal latitude;
+
+
+
     @Column()
     private BigDecimal longitude;
+
+    @Builder
+    public RestaurantLocation(Restaurant restaurant, String roadAddress, BigDecimal latitude, BigDecimal longitude) {
+        this.restaurant = restaurant;
+        this.roadAddress = roadAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }
