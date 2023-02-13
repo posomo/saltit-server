@@ -8,7 +8,7 @@ import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantTimeDay;
 import java.util.List;
 import java.util.UUID;
 
-public class RestaurantOpenTimeFactory extends AbstractRestaurantTimeFactory {
+public class RestaurantOpenTimeFactory extends RestaurantTimeFactory {
 
 
     @Override

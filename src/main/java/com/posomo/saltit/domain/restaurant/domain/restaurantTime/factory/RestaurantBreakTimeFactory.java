@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class RestaurantBreakTimeFactory extends AbstractRestaurantTimeFactory{
+public class RestaurantBreakTimeFactory extends RestaurantTimeFactory {
 
     @Override
     protected RestaurantTime build(UUID id, Restaurant restaurant, List<RestaurantTimeDay> days, RestaurantTimeDto timeDto) {
