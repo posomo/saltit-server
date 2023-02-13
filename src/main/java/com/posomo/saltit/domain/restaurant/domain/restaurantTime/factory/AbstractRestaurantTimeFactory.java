@@ -16,7 +16,7 @@ public abstract class AbstractRestaurantTimeFactory implements RestaurantTimeFac
         RestaurantTime timeFk = new RestaurantTime(timeId);
         List<RestaurantTimeDay> days = Day.toRestaurantTimeDayList(timeFk,
                 timeDto.getDays());
-        return this.build(timeId,restaurant, days, timeDto);
+        return build(timeId,restaurant, days, timeDto);
     }
 
     abstract protected RestaurantTime build(UUID id, Restaurant restaurant, List<RestaurantTimeDay> days, RestaurantTimeDto timeDto);
