@@ -18,7 +18,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping("/list")
-    public List<UUID> createMany(@RequestBody RestaurantCreateManyDto restaurantCreateManyDTO){
-        return this.restaurantService.createMany(restaurantCreateManyDTO);
+    public List<UUID> saveAll(@RequestBody RestaurantCreateManyDto restaurantCreateManyDTO){
+        return this.restaurantService.saveAll(restaurantCreateManyDTO);
     }
 }

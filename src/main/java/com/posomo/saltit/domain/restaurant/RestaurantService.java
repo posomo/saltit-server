@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
-    public List<UUID> createMany(RestaurantCreateManyDto restaurantCreateManyDto) {
+    public List<UUID> saveAll(RestaurantCreateManyDto restaurantCreateManyDto) {
         List<Restaurant> restaurants = restaurantCreateManyDto.getRestaurants().stream().map(RestaurantDto::toEntity).toList();
         restaurantRepository.saveAll(restaurants);
         return restaurants.stream().map(BaseEntity::getId).toList();
