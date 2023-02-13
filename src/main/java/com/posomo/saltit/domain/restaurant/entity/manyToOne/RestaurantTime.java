@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,7 @@ public class RestaurantTime extends BaseEntity {
     @OneToMany(mappedBy = "time")
     private List<RestaurantTimeDay> days = new ArrayList<>();
 
+    @Builder
     public RestaurantTime(UUID id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo, List<RestaurantTimeDay> days) {
         super(id);
         this.restaurant = restaurant;
