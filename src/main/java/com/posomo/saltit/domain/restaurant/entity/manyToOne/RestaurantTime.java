@@ -11,19 +11,38 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantTime extends BaseEntity {
 
     @JoinColumn(name = "restaurant_id")
     @ManyToOne
     private Restaurant restaurant;
     private LocalTime timeFrom;
+
+    public RestaurantTime(UUID id) {
+        super(id);
+    }
+
     private LocalTime timeTo;
 
     @OneToMany(mappedBy = "time")
     private List<RestaurantTimeDay> days = new ArrayList<>();
+
+    @Builder
+    public RestaurantTime(UUID id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo, List<RestaurantTimeDay> days) {
+        super(id);
+        this.restaurant = restaurant;
+        this.timeFrom = timeFrom;
+        this.timeTo = timeTo;
+        this.days = days;
+    }
 }
