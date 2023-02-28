@@ -1,6 +1,6 @@
-package com.posomo.saltit.domain.restaurant;
+package com.posomo.saltit.controller;
+import com.posomo.saltit.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

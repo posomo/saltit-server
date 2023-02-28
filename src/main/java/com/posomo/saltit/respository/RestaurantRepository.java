@@ -1,4 +1,4 @@
-package com.posomo.saltit.domain.restaurant;
+package com.posomo.saltit.respository;
 
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import java.util.UUID;

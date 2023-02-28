@@ -1,4 +1,5 @@
 package com.posomo.saltit.domain.restaurant.entity;
+import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantCategory;
 import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantMenu;
 import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantTime;
 import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantInformation;
@@ -47,6 +48,9 @@ public class Restaurant{
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantTime> times = new ArrayList<>();
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<RestaurantCategory> categories = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)

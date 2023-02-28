@@ -1,7 +1,6 @@
-package com.posomo.saltit.domain.restaurant;
+package com.posomo.saltit.service;
+import com.posomo.saltit.respository.RestaurantRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
