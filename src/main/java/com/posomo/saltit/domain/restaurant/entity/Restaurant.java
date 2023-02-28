@@ -1,16 +1,10 @@
 package com.posomo.saltit.domain.restaurant.entity;
-
-import com.posomo.saltit.domain.restaurant.entity.core.entity.BaseEntity;
 import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantMenu;
 import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantTime;
 import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantInformation;
 import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantLocation;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +21,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Restaurant extends BaseEntity {
+public class Restaurant{
 
-    public Restaurant(UUID id) {
-        super(id);
-    }
-
+    /**
+     * id GenerationType 크롤링 코드 작성 후 수정 예정
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column
     private String rid;
     @Column(length = 20)
@@ -41,16 +36,16 @@ public class Restaurant extends BaseEntity {
     @Column(length = 100)
     private String titleImageUrl;
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private RestaurantLocation location;
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private RestaurantInformation information;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantMenu> menus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantTime> times = new ArrayList<>();
 
     @CreatedDate
@@ -62,9 +57,8 @@ public class Restaurant extends BaseEntity {
 
 
     @Builder
-    public Restaurant(@NonNull UUID id, @NonNull String rid, @NonNull String name, @NonNull String titleImageUrl, @NonNull RestaurantLocation location,
+    public Restaurant(@NonNull String rid, @NonNull String name, @NonNull String titleImageUrl, @NonNull RestaurantLocation location,
                       @NonNull RestaurantInformation information, List<RestaurantMenu> menus, List<RestaurantTime> times) {
-        super(id);
         this.rid = rid;
         this.name = name;
         this.titleImageUrl = titleImageUrl;
