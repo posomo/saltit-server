@@ -1,4 +1,4 @@
-package com.posomo.saltit.domain.restaurant.entity.manyToOne;
+package com.posomo.saltit.domain.restaurant.entity;
 
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import jakarta.persistence.*;

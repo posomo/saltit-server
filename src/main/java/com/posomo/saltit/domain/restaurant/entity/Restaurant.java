@@ -1,15 +1,10 @@
 package com.posomo.saltit.domain.restaurant.entity;
-import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantCategory;
-import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantMenu;
-import com.posomo.saltit.domain.restaurant.entity.manyToOne.RestaurantTime;
-import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantInformation;
-import com.posomo.saltit.domain.restaurant.entity.oneToOne.RestaurantLocation;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
