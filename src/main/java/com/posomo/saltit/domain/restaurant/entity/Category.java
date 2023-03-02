@@ -1,12 +1,11 @@
-package com.posomo.saltit.domain.restaurant.entity.manyToOne;
+package com.posomo.saltit.domain.restaurant.entity;
 
-import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class RestaurantCategory {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,7 +1,7 @@
 package com.posomo.saltit.domain.restaurant.entity.manyToOne;
 
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
-import com.posomo.saltit.domain.restaurant.entity.enums.Day;
+import com.posomo.saltit.domain.restaurant.enums.Day;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
