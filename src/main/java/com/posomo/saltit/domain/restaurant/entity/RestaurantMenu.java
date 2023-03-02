@@ -1,5 +1,6 @@
 package com.posomo.saltit.domain.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,8 +21,7 @@ public class RestaurantMenu{
     @Column(length = 20)
     private String name;
     private Integer price;
-    @Column(name = "is_main_menu")
-    private Boolean isMainMenu;
+    private Integer orderNumber;
     @Column(length = 300)
     private String pictureUrl;
     @Builder
@@ -30,7 +30,6 @@ public class RestaurantMenu{
         this.restaurant = restaurant;
         this.name = name;
         this.price = price;
-        this.isMainMenu = isMainMenu;
         this.pictureUrl = pictureUrl;
     }
 }
