@@ -23,15 +23,21 @@ public class RestaurantLocation{
     private Restaurant restaurant;
     @Column(length = 200)
     private String roadAddress;
-    @Column()
+    @Column(columnDefinition = "DECIMAL(13,9)")
     private BigDecimal latitude;
-    @Column()
+    @Column(columnDefinition = "DECIMAL(13,9)")
     private BigDecimal longitude;
-    @Builder
-    public RestaurantLocation(Restaurant restaurant, String roadAddress, BigDecimal latitude, BigDecimal longitude) {
-        this.restaurant = restaurant;
-        this.roadAddress = roadAddress;
-        this.latitude = latitude;
-        this.longitude = longitude;
+
+    public static RestaurantLocation create(Long id, Restaurant restaurant, String roadAddress, BigDecimal latitude,
+                                            BigDecimal longitude){
+        return new RestaurantLocation(id,restaurant,roadAddress,latitude,longitude);
+    }
+    protected RestaurantLocation(Long id, Restaurant restaurant, String roadAddress, BigDecimal latitude,
+                                 BigDecimal longitude){
+        this.id=id;
+        this.restaurant=restaurant;
+        this.roadAddress=roadAddress;
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
 }
