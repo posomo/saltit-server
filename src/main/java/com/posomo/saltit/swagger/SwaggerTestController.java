@@ -29,5 +29,4 @@ public class SwaggerTestController {
     public String Hello(){
         return "hello";
     }
-
 }
