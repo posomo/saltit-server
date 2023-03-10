@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantTime{
     @Id
@@ -26,10 +25,14 @@ public class RestaurantTime{
     private LocalTime timeTo;
     @Enumerated(value = EnumType.STRING)
     private Day day;
-    @Builder
-    public RestaurantTime(UUID id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo) {
-        this.restaurant = restaurant;
-        this.timeFrom = timeFrom;
-        this.timeTo = timeTo;
+    public static RestaurantTime create(Long id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo, Day day){
+        return new RestaurantTime(id,restaurant,timeFrom,timeTo,day);
+    }
+    protected RestaurantTime(Long id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo, Day day){
+        this.id=id;
+        this.restaurant=restaurant;
+        this.timeFrom=timeFrom;
+        this.timeTo=timeTo;
+        this.day=day;
     }
 }

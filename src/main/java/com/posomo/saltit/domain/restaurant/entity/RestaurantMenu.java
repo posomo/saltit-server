@@ -24,12 +24,17 @@ public class RestaurantMenu{
     private Integer orderNumber;
     @Column(length = 300)
     private String pictureUrl;
-    @Builder
-    public RestaurantMenu(Restaurant restaurant, String name, Integer price, Boolean isMainMenu,
-                          String pictureUrl) {
-        this.restaurant = restaurant;
-        this.name = name;
-        this.price = price;
-        this.pictureUrl = pictureUrl;
+    public static RestaurantMenu create(Long id, Restaurant restaurant, String name, Integer price,
+                                        Integer orderNumber, String pictureUrl){
+        return new RestaurantMenu(id,restaurant,name,price,orderNumber,pictureUrl);
+    }
+    protected RestaurantMenu(Long id, Restaurant restaurant, String name, Integer price,
+                             Integer orderNumber, String pictureUrl){
+        this.id=id;
+        this.restaurant=restaurant;
+        this.name=name;
+        this.price=price;
+        this.orderNumber=orderNumber;
+        this.pictureUrl=pictureUrl;
     }
 }
