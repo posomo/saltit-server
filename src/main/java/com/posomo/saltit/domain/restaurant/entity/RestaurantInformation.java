@@ -24,10 +24,12 @@ public class RestaurantInformation{
 
     private BigDecimal rating;
 
-    @Builder
-    public RestaurantInformation(Restaurant restaurant, BigDecimal average, BigDecimal rating) {
-        this.restaurant = restaurant;
-        this.average = average;
-        this.rating = rating;
+    public static RestaurantInformation create(Long id, BigDecimal average, BigDecimal rating){
+        return new RestaurantInformation(id,average,rating);
+    }
+    protected RestaurantInformation(Long id, BigDecimal average, BigDecimal rating){
+        this.id=id;
+        this.average=average;
+        this.rating=rating;
     }
 }
