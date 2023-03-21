@@ -33,6 +33,8 @@ public class Restaurant{
     private String titleImageUrl;
     @Column
     private Integer score;
+    @Column(length = 50)
+    private String phone;
     @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private RestaurantLocation location;
 
