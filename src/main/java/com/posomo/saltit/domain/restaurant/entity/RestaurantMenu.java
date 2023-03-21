@@ -18,7 +18,7 @@ public class RestaurantMenu{
     @JoinColumn(name = "restaurant_id")
     @ManyToOne
     private Restaurant restaurant;
-    @Column(length = 20)
+    @Column(length = 300)
     private String name;
     private Integer price;
     private Integer orderNumber;
