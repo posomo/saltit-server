@@ -27,7 +27,7 @@ public class Restaurant{
     private Long id;
     @Column
     private String rid;
-    @Column(length = 20)
+    @Column(length = 50)
     private String name;
     @Column(length = 200)
     private String titleImageUrl;
