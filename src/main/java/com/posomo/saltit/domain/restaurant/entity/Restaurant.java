@@ -29,7 +29,7 @@ public class Restaurant{
     private String rid;
     @Column(length = 20)
     private String name;
-    @Column(length = 100)
+    @Column(length = 200)
     private String titleImageUrl;
     @Column
     private Integer score;
