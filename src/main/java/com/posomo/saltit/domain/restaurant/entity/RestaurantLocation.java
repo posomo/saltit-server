@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 
 @Entity
@@ -23,21 +24,15 @@ public class RestaurantLocation{
     private Restaurant restaurant;
     @Column(length = 200)
     private String roadAddress;
-    @Column(columnDefinition = "DECIMAL(13,9)")
-    private BigDecimal latitude;
-    @Column(columnDefinition = "DECIMAL(13,9)")
-    private BigDecimal longitude;
+    private Point location;
 
-    public static RestaurantLocation create(Long id, Restaurant restaurant, String roadAddress, BigDecimal latitude,
-                                            BigDecimal longitude){
-        return new RestaurantLocation(id,restaurant,roadAddress,latitude,longitude);
+    public static RestaurantLocation create(Long id, Restaurant restaurant, String roadAddress, Point location){
+        return new RestaurantLocation(id,restaurant,roadAddress,location);
     }
-    protected RestaurantLocation(Long id, Restaurant restaurant, String roadAddress, BigDecimal latitude,
-                                 BigDecimal longitude){
+    protected RestaurantLocation(Long id, Restaurant restaurant, String roadAddress,Point location){
         this.id=id;
         this.restaurant=restaurant;
         this.roadAddress=roadAddress;
-        this.latitude=latitude;
-        this.longitude=longitude;
+        this.location=location;
     }
 }
