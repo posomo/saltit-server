@@ -17,9 +17,10 @@ import java.util.Optional;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     public Slice<RestaurantSummary> getRestaurantSummaries(RestaurantFilterRequest filterRequest){
+        String location = "POINT("+filterRequest.getUserLatitude()+" "+filterRequest.getUserLongitude()+")";
         PageRequest pageRequest = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
-        Slice<Object[]> resultObjects = restaurantRepository.findRestaurantByFilter(filterRequest.getMaxPrice(), filterRequest.getFoodTypeName(),
-                filterRequest.getUserLongitude(),filterRequest.getUserLatitude(),filterRequest.getMaxDistance()
+        Slice<Object[]> resultObjects = restaurantRepository.findRestaurantByFilter(filterRequest.getMaxPrice(),
+                filterRequest.getFoodTypeName(),location, filterRequest.getMaxDistance()
         ,pageRequest);
         return getRestaurantSummaryFromObjects(resultObjects);
     }
