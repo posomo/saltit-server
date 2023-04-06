@@ -30,6 +30,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-spatial
+    implementation 'org.hibernate:hibernate-spatial:6.1.6.Final'
 }
 
 tasks.named('test') {
