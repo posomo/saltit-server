@@ -23,7 +23,7 @@ public class RestaurantFilterRequest {
     public RestaurantFilterRequest(String foodTypeName, Double maxDistance, Integer maxPrice,
                                    Integer page, Integer size, Double userLongitude, Double userLatitude){
         this.foodTypeName = foodTypeName;
-        this.maxDistance = (maxDistance == null) ? 10000D : maxDistance;
+        this.maxDistance = ((maxDistance == null) ? 1000D : maxDistance)/1000;
         this.maxPrice = (maxPrice == null) ? 40000 : maxPrice;
         this.page = page;
         this.size = size;
