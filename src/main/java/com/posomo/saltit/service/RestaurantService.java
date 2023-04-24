@@ -1,6 +1,9 @@
 package com.posomo.saltit.service;
+import com.posomo.saltit.domain.exception.NoRecordException;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
+import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
 import com.posomo.saltit.respository.RestaurantRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +27,13 @@ public class RestaurantService {
         ,pageRequest);
         return getRestaurantSummaryFromObjects(resultObjects);
     }
+
+    public RestaurantDetailResponse getRestaurantDetail(long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findByIdWithMenus(restaurantId)
+            .orElseThrow(() -> new NoRecordException(String.format("restaurantId = %d record not found", restaurantId)));
+        return RestaurantDetailResponse.of(restaurant);
+    }
+
     private Slice<RestaurantSummary> getRestaurantSummaryFromObjects(Slice<Object[]> restaurantSummaries){
         return restaurantSummaries.map(objects-> RestaurantSummary.create(
             objects[0] == null ? null : ((String)objects[0]),
