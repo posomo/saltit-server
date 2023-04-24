@@ -55,7 +55,7 @@ public class RestaurantController {
 
     @Operation(summary = "식당 세부 정보 조회 api")
     @GetMapping("/restaurant/detail/{restaurantId}")
-    public RestaurantDetailResponse getRestaurantDetail(@PathVariable("restaurantId") @NotBlank Integer restaurantId) {
+    public RestaurantDetailResponse getRestaurantDetail(@PathVariable("restaurantId") Integer restaurantId) {
         return restaurantService.getRestaurantDetail(restaurantId);
     }
     private void checkInvalidArgument(RestaurantFilterRequest filterRequest){
