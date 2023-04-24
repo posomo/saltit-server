@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
 
@@ -31,6 +32,14 @@ public class ControllerAdvice {
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
 		return "해당 레코드는 존재하지 않습니다.";
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	protected String methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+		log.error(e.getMessage());
+		log.error(getStackTrace(e));
+		return "Request Param Type Mismatch";
 	}
 
 	private String getStackTrace(Throwable t) {
