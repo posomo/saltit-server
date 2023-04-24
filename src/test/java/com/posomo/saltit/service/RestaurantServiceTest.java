@@ -2,6 +2,7 @@ package com.posomo.saltit.service;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
@@ -44,7 +44,7 @@ class RestaurantServiceTest {
 			menus.add(new RestaurantMenu(4L, null, "sideMenu1", 2000, null, null, false));
 			menus.add(new RestaurantMenu(5L, null, "sideMenu2", 1000, null, null, false));
 			Restaurant restaurant = Restaurant.create(1L, null, "테스트 식당", null, 100, null, null, menus, null, null, null);
-			Mockito.when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
+			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
 			RestaurantDetailResponse restaurantDetail = restaurantService.getRestaurantDetail(1L);
@@ -82,7 +82,7 @@ class RestaurantServiceTest {
 			List<RestaurantMenu> menus = new ArrayList<>();
 			Restaurant restaurant = Restaurant.create(1L, null, "테스트 식당", null, 100, null, null, menus, null, null,
 				null);
-			Mockito.when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
+			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
 			RestaurantDetailResponse restaurantDetail = restaurantService.getRestaurantDetail(1L);
@@ -99,7 +99,7 @@ class RestaurantServiceTest {
 		@DisplayName("식당이 없을 때")
 		void edge2() {
 			//when
-			Mockito.when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.empty());
+			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.empty());
 
 			// //then
 			assertThrows(NoRecordException.class, () -> restaurantService.getRestaurantDetail(1L));

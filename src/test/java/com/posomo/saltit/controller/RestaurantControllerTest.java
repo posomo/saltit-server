@@ -1,17 +1,17 @@
 package com.posomo.saltit.controller;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,8 +44,8 @@ class RestaurantControllerTest {
 		RestaurantDetailResponse.Classification main = new RestaurantDetailResponse.Classification(3, mainMenus);
 		RestaurantDetailResponse.Classification side = new RestaurantDetailResponse.Classification(2, sideMenus);
 		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, 5, "test store", 100, main, side);
-		Mockito.when(restaurantService.getRestaurantDetail(1L)).thenReturn(restaurantDetailResponse);
-		Mockito.when(restaurantService.getRestaurantDetail(2L)).thenThrow(new NoRecordException(String.format("restaurantId = %d record not found", 2L)));
+		when(restaurantService.getRestaurantDetail(1L)).thenReturn(restaurantDetailResponse);
+		when(restaurantService.getRestaurantDetail(2L)).thenThrow(new NoRecordException(String.format("restaurantId = %d record not found", 2L)));
 	}
 
 	@Nested
@@ -68,7 +68,7 @@ class RestaurantControllerTest {
 			String content = mvc.perform(get("/api/v1/restaurant/detail/2"))
 				.andExpect(status().is4xxClientError())
 				.andReturn().getResponse().getContentAsString();
-			Assertions.assertThat(content).isEqualTo("해당 레코드는 존재하지 않습니다.");
+			assertThat(content).isEqualTo("해당 레코드는 존재하지 않습니다.");
 		}
 	}
 
