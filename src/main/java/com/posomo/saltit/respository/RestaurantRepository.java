@@ -30,6 +30,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
                                            Pageable pageable);
 
     @Query(value = "select r from Restaurant r left join fetch r.menus where r.id=:id")
-    @EntityGraph(attributePaths = {"menus"})
     Optional<Restaurant> findByIdWithMenus(@Param(value = "id") long id);
 }
