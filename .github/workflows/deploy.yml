@@ -1,0 +1,76 @@
+name: deploy
+
+on:
+  push:
+    branches: [ "main" ]
+      
+jobs:
+  CI-CD:
+    runs-on: ubuntu-latest
+    steps:
+
+    ## jdk setting
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin' # https://github.com/actions/setup-java
+    
+    ## gradle caching
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |  
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    ## create application.yml
+    - name: make application.yml
+      if: contains(github.ref, 'main')
+      run: |
+        mkdir ./src/main/resources
+        cd ./src/main/resources
+        touch ./application.yml
+        echo "${{ secrets.SECRET_YML }}" > ./application.yml
+      shell: bash
+      
+    ## gradle build
+    - name: Build with Gradle
+      run: |
+        chmod +x ./gradlew
+        ./gradlew clean build --exclude-task test
+    
+    ## docker build & push to main
+    - name: Docker build & push
+      if: contains(github.ref, 'main')
+      run: |
+          echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} -f Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+          
+    ## deploy to main
+    - name: Deploy to main
+      uses: appleboy/ssh-action@master
+      id: deploy-main
+      if: contains(github.ref, 'main')
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.REMOTE_SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+            cd /home/ubuntu/saltit-ec2-environment/
+            echo ${{ secrets.DOCKER_TOKEN }} | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+            chmod +x release-process.sh
+            sudo sh release-process.sh
+            
+            
+      
+      
+      
+      
+      
