@@ -1,6 +1,7 @@
 package com.posomo.saltit.respository;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.*;
 
 import java.util.ArrayList;
@@ -55,6 +56,29 @@ class RestaurantRepositoryTest {
 			assertThat(findRestaurant.getName()).isEqualTo(savedRestaurant.getName());
 			assertThat(findRestaurant.getScore()).isEqualTo(savedRestaurant.getScore());
 			assertThat(findRestaurant.getMenus()).hasSize(menus.size());
+		}
+		@Test
+		@DisplayName("menu join fetch 작동 테스트")
+		void nPlusOneCheck() {
+			//given
+			List<RestaurantMenu> menus = new ArrayList<>();
+			Restaurant restaurant = Restaurant.create(1L, null, "테스트 가게", null, 100, null, null, menus, null, null, null);
+			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+
+			//when
+			Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+			entityManager.flush();
+			entityManager.clear();
+			Restaurant findRestaurantLazy = restaurantRepository.findByIdWithMenus(savedRestaurant.getId()).get();
+			entityManager.clear();
+
+			//then
+			assertDoesNotThrow(() -> findRestaurantLazy.getMenus().get(0));
 		}
 
 		@Test
