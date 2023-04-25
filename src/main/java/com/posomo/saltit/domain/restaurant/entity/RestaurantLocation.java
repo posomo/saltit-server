@@ -18,7 +18,7 @@ public class RestaurantLocation{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

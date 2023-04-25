@@ -35,10 +35,10 @@ public class Restaurant{
     private Integer score;
     @Column(length = 50)
     private String phone;
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL) //LazyLoading 적용 안됨 - 연관관계의 주인이 아님
     private RestaurantLocation location;
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL) //LazyLoading 적용 안됨 - 연관관계의 주인이 아님
     private RestaurantInformation information;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
@@ -50,7 +50,7 @@ public class Restaurant{
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantCategory> categories = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FoodType foodType;
 
     @Column(updatable = false)
