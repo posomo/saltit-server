@@ -1,6 +1,7 @@
 package com.posomo.saltit.controller;
 import com.posomo.saltit.domain.exception.ErrorResponse;
 import com.posomo.saltit.domain.exception.InvalidArgumentException;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummaryList;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Slice;
@@ -49,6 +51,12 @@ public class RestaurantController {
         Integer pageNumber = restaurantSummaries.getPageable().getPageNumber();
         return new ResponseEntity(RestaurantSummaryList.create(restaurantSummaries.stream().toList(),restaurantSummaries.hasNext(),
                 pageNumber,pageSize),HttpStatus.OK);
+    }
+
+    @Operation(summary = "식당 세부 정보 조회 api")
+    @GetMapping("/restaurant/detail/{restaurantId}")
+    public RestaurantDetailResponse getRestaurantDetail(@PathVariable("restaurantId") Integer restaurantId) {
+        return restaurantService.getRestaurantDetail(restaurantId);
     }
     private void checkInvalidArgument(RestaurantFilterRequest filterRequest){
         if(isInvalidParameters(filterRequest)){
