@@ -71,6 +71,15 @@ class RestaurantControllerTest {
 				.andReturn().getResponse().getContentAsString();
 			assertThat(content).isEqualTo("해당 레코드는 존재하지 않습니다.");
 		}
+
+		@Test
+		@DisplayName("ID 형식 오류(숫자가 아닌 경우)")
+		void edge2() throws Exception {
+			String content = mvc.perform(get("/api/v1/restaurant/detail/error"))
+				.andExpect(status().is4xxClientError())
+				.andReturn().getResponse().getContentAsString();
+			assertThat(content).isEqualTo("Request Param Type Mismatch");
+		}
 	}
 
 }
