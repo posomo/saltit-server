@@ -19,7 +19,7 @@ import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
 
 import jakarta.persistence.EntityManager;
 
-@DataJpaTest
+@DataJpaTest(showSql = false)
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class RestaurantRepositoryTest {
 
