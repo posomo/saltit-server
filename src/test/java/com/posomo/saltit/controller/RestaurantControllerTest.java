@@ -49,6 +49,7 @@ class RestaurantControllerTest {
 	}
 
 	@Nested
+	@DisplayName("식당 세부 정보 조회 api")
 	class getRestaurantDetail {
 		@Test
 		@DisplayName("정상 흐름")

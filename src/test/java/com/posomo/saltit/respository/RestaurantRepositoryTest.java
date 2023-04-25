@@ -29,6 +29,7 @@ class RestaurantRepositoryTest {
 	private EntityManager entityManager;
 
 	@Nested
+	@DisplayName("Restaurant 데이터를 Menus 정보와 함께 조회(n+1 해결)")
 	class findByIdWithMenus {
 		@Test
 		@DisplayName("정상흐름")
@@ -57,7 +58,7 @@ class RestaurantRepositoryTest {
 		}
 
 		@Test
-		@DisplayName("Menu가 0개일때")
+		@DisplayName("해당 가게에 메뉴가 0개일 때")
 		void edge1() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();

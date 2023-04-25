@@ -32,6 +32,7 @@ class RestaurantServiceTest {
 	private RestaurantRepository restaurantRepository;
 
 	@Nested
+	@DisplayName("식당 세부 정보 조회 서비스(Entity -> DTO)")
 	class getRestaurantDetail {
 		@Test
 		@DisplayName("정상흐름")
@@ -76,7 +77,7 @@ class RestaurantServiceTest {
 		}
 
 		@Test
-		@DisplayName("Menu가 0개일때")
+		@DisplayName("해당 가게에 메뉴가 0개일 때")
 		void edge1() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
