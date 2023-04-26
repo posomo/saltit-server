@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
+import com.posomo.saltit.global.ErrorMessage;
+import com.posomo.saltit.global.ResponseMessage;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,10 +22,10 @@ public class ControllerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Throwable.class)
 	protected String baseExceptionHandler(Exception e) {
-		log.error("알 수 없는 에러가 발생했습니다.");
+		log.error(ErrorMessage.UNKNOWN_ERROR);
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
-		return "서버 에러가 발생했습니다. 개발팀으로 문의 주세요.";
+		return ResponseMessage.UNKNOWN_ERROR;
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -31,7 +33,7 @@ public class ControllerAdvice {
 	protected String noRecordExceptionHandler(NoRecordException e) {
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
-		return "해당 레코드는 존재하지 않습니다.";
+		return ResponseMessage.RECODE_NOT_FOUND;
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -39,7 +41,7 @@ public class ControllerAdvice {
 	protected String methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
-		return "Request Param Type Mismatch";
+		return ResponseMessage.MISMATCH_PARAM;
 	}
 
 	private String getStackTrace(Throwable t) {
