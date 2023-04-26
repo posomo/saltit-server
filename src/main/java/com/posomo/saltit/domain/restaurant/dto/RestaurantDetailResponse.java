@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
+import com.posomo.saltit.global.constant.Url;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,9 @@ import lombok.Data;
 public class RestaurantDetailResponse {
 	@Schema(description = "식당 ID")
 	private Long id;
+
+	@Schema(description = "다이닝 코드 URL")
+	private String diningcodeUrl;
 
 	@Schema(description = "총 메뉴 갯수")
 	private Integer totalMenuCount;
@@ -50,7 +54,9 @@ public class RestaurantDetailResponse {
 			.toList();
 		Classification side = Classification.of(sideMenus);
 
-		return new RestaurantDetailResponse(id, totalMenuCount, name, rating, main, side);
+		String diningcodeUrl = Url.DINING_CODE_REVIEW_URL_PREFIX + restaurant.getRid();
+
+		return new RestaurantDetailResponse(id, diningcodeUrl, totalMenuCount, name, rating, main, side);
 	}
 
 	@AllArgsConstructor

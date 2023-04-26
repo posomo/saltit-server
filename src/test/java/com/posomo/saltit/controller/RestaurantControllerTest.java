@@ -44,7 +44,7 @@ class RestaurantControllerTest {
 
 		RestaurantDetailResponse.Classification main = new RestaurantDetailResponse.Classification(3, mainMenus);
 		RestaurantDetailResponse.Classification side = new RestaurantDetailResponse.Classification(2, sideMenus);
-		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, 5, "test store", 100, main, side);
+		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, "testUrl", 5, "test store", 100, main, side);
 		when(restaurantService.getRestaurantDetail(1L)).thenReturn(restaurantDetailResponse);
 		when(restaurantService.getRestaurantDetail(2L)).thenThrow(new NoRecordException(String.format("restaurantId = %d record not found", 2L)));
 	}
