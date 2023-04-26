@@ -19,7 +19,7 @@ public class RestaurantTime{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JoinColumn(name = "restaurant_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
     private LocalTime timeFrom;
     private LocalTime timeTo;

@@ -16,7 +16,12 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-**/resources
+**/application.yml
+**/application.properties
+
+## P6spy ##
+**/spy.log
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
