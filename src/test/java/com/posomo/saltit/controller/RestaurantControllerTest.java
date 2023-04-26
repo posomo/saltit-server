@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
+import com.posomo.saltit.global.constant.ResponseMessage;
 import com.posomo.saltit.service.RestaurantService;
 
 @WebMvcTest(RestaurantController.class)
@@ -69,7 +70,7 @@ class RestaurantControllerTest {
 			String content = mvc.perform(get("/api/v1/restaurant/detail/2"))
 				.andExpect(status().is4xxClientError())
 				.andReturn().getResponse().getContentAsString();
-			assertThat(content).isEqualTo("해당 레코드는 존재하지 않습니다.");
+			assertThat(content).isEqualTo(ResponseMessage.RECODE_NOT_FOUND);
 		}
 
 		@Test
@@ -78,7 +79,7 @@ class RestaurantControllerTest {
 			String content = mvc.perform(get("/api/v1/restaurant/detail/error"))
 				.andExpect(status().is4xxClientError())
 				.andReturn().getResponse().getContentAsString();
-			assertThat(content).isEqualTo("Request Param Type Mismatch");
+			assertThat(content).isEqualTo(ResponseMessage.MISMATCH_PARAM);
 		}
 	}
 

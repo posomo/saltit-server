@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
-import com.posomo.saltit.global.ErrorMessage;
-import com.posomo.saltit.global.ResponseMessage;
+import com.posomo.saltit.global.constant.ErrorMessage;
+import com.posomo.saltit.global.constant.ResponseMessage;
 
 import lombok.extern.slf4j.Slf4j;
 

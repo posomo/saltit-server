@@ -1,4 +1,4 @@
-package com.posomo.saltit.global;
+package com.posomo.saltit.global.constant;
 
 public class ResponseMessage {
 	public static final String UNKNOWN_ERROR = "서버 에러가 발생했습니다. 개발팀으로 문의 주세요.";
