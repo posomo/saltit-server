@@ -9,6 +9,6 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			.allowedOrigins("http://3.35.147.39", "http://3.35.147.39:80");
+			.allowedOrigins("http://3.35.147.39", "http://3.35.147.39:80", "http://backend-nginx");
 	}
 }
