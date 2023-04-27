@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalTime;
 import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class RestaurantTime{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +28,4 @@ public class RestaurantTime{
     private LocalTime timeTo;
     @Enumerated(value = EnumType.STRING)
     private Day day;
-    public static RestaurantTime create(Long id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo, Day day){
-        return new RestaurantTime(id,restaurant,timeFrom,timeTo,day);
-    }
-    protected RestaurantTime(Long id, Restaurant restaurant, LocalTime timeFrom, LocalTime timeTo, Day day){
-        this.id=id;
-        this.restaurant=restaurant;
-        this.timeFrom=timeFrom;
-        this.timeTo=timeTo;
-        this.day=day;
-    }
 }

@@ -1,14 +1,12 @@
 package com.posomo.saltit.domain.restaurant.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import lombok.*;
 
-import java.math.BigDecimal;
 
-@Getter
+@Data
 @Schema(description = "레스토랑 정보")
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantSummary {
     @Schema(description = "가게 사진", defaultValue = "null")
@@ -26,8 +24,15 @@ public class RestaurantSummary {
     @Schema(description = "거리(단위 m)", example = "300")
     private Double distance;
 
-    public static RestaurantSummary create(String titleImageUrl, String restaurantName, Integer rating, Integer mainMenuPrice,
-                                           String mainMenuName, String categoryName,Double distance){
-        return new RestaurantSummary(titleImageUrl,restaurantName,rating,mainMenuPrice,mainMenuName,categoryName,distance);
+    public static RestaurantSummary of(Object[] objects) {
+        return new RestaurantSummary(
+            objects[0] == null ? null : ((String)objects[0]),
+            objects[1] == null ? null : ((String)objects[1]),
+            objects[2] == null ? null : ((Integer)objects[2]),
+            objects[3] == null ? null : ((Integer)objects[3]),
+            objects[4] == null ? null : ((String)objects[4]),
+            objects[5] == null ? null : ((String)objects[5]),
+            objects[6] == null ? null : ((Double)objects[6])
+        );
     }
 }

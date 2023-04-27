@@ -37,13 +37,20 @@ class RestaurantRepositoryTest {
 		void ok() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
-			Restaurant restaurant = Restaurant.create(1L, null, "테스트 가게", null, 100, null, null, menus, null, null, null);
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+
+			Restaurant restaurant = Restaurant.builder()
+				.id(1L)
+				.name("테스트 가게")
+				.score(100)
+				.menus(menus)
+				.build();
+
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
 
 			//when
 			Restaurant savedRestaurant = restaurantRepository.save(restaurant);
@@ -57,18 +64,25 @@ class RestaurantRepositoryTest {
 			assertThat(findRestaurant.getScore()).isEqualTo(savedRestaurant.getScore());
 			assertThat(findRestaurant.getMenus()).hasSize(menus.size());
 		}
+
 		@Test
 		@DisplayName("menu join fetch 작동 테스트")
 		void nPlusOneCheck() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
-			Restaurant restaurant = Restaurant.create(1L, null, "테스트 가게", null, 100, null, null, menus, null, null, null);
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
-			menus.add(new RestaurantMenu(null, restaurant, null, null, null, null, true));
+			Restaurant restaurant = Restaurant.builder()
+				.id(1L)
+				.name("테스트 가게")
+				.score(100)
+				.menus(menus)
+				.build();
+
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
+			menus.add(RestaurantMenu.builder().restaurant(restaurant).build());
 
 			//when
 			Restaurant savedRestaurant = restaurantRepository.save(restaurant);
@@ -86,7 +100,12 @@ class RestaurantRepositoryTest {
 		void edge1() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
-			Restaurant restaurant = Restaurant.create(1L, null, "테스트 가게", null, 100, null, null, menus, null, null, null);
+			Restaurant restaurant = Restaurant.builder()
+				.id(1L)
+				.name("테스트 가게")
+				.score(100)
+				.menus(menus)
+				.build();
 
 			//when
 			Restaurant savedRestaurant = restaurantRepository.save(restaurant);

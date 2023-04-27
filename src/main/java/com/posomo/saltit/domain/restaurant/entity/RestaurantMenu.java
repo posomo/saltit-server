@@ -12,8 +12,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
-public class RestaurantMenu{
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+public class RestaurantMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,12 +28,4 @@ public class RestaurantMenu{
     @Column(length = 300)
     private String pictureUrl;
     private boolean mainMenu;
-    public static RestaurantMenu create(Long id, Restaurant restaurant, String name, Integer price,
-                                        Integer orderNumber, String pictureUrl, boolean mainMenu){
-        return new RestaurantMenu(id,restaurant,name,price,orderNumber,pictureUrl, mainMenu);
-    }
-
-    public RestaurantMenu(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
 }

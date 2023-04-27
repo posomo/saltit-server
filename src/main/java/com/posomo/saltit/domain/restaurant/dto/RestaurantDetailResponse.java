@@ -7,12 +7,15 @@ import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
 import com.posomo.saltit.global.constant.Url;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "식당 상세 조회 페이지")
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantDetailResponse {
 	@Schema(description = "식당 ID")
 	private Long id;

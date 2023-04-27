@@ -1,13 +1,11 @@
 package com.posomo.saltit.service;
 
-import org.springframework.data.domain.Slice;
-
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
-import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSummaryResponse;
 
 public interface RestaurantService {
-	Slice<RestaurantSummary> getRestaurantSummaries(RestaurantFilterRequest filterRequest);
+	RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest);
 
-	public RestaurantDetailResponse getRestaurantDetail(long restaurantId);
+	RestaurantDetailResponse getRestaurantDetail(long restaurantId);
 }

@@ -2,10 +2,10 @@ package com.posomo.saltit.global.aop;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
-public class ControllerAdviceV1 implements ControllerAdvice{
+public class ControllerAdviceV1 implements ControllerAdvice {
 
 	public String baseExceptionHandler(Exception e) {
 		log.error(ErrorMessage.UNKNOWN_ERROR);
@@ -36,6 +36,21 @@ public class ControllerAdviceV1 implements ControllerAdvice{
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
 		return ResponseMessage.MISMATCH_PARAM;
+	}
+
+	@Override
+	public String methodArgumentNotValidException(MethodArgumentNotValidException e) {
+		log.error(e.getMessage());
+		log.error(getStackTrace(e));
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(e.getFieldErrors()
+			.stream()
+			.map(FieldError::getField)
+			.collect(Collectors.joining(", "))
+		);
+		sb.append(ResponseMessage.INVALID_PARAM);
+		return sb.toString();
 	}
 
 	private String getStackTrace(Throwable t) {
