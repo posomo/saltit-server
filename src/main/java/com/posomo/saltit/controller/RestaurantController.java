@@ -14,6 +14,7 @@ import com.posomo.saltit.domain.restaurant.dto.RestaurantSummaryResponse;
 public interface RestaurantController {
 	@PostMapping("/home/restaurant-summary")
 	RestaurantSummaryResponse getRestaurantSummaries(@RequestBody RestaurantFilterRequest filterRequest);
+
 	@GetMapping("/restaurant/detail/{restaurantId}")
 	RestaurantDetailResponse getRestaurantDetail(@PathVariable("restaurantId") Integer restaurantId);
 }

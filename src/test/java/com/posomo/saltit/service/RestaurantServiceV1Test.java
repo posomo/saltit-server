@@ -25,7 +25,6 @@ import com.posomo.saltit.respository.RestaurantRepository;
 @ExtendWith(MockitoExtension.class)
 class RestaurantServiceV1Test {
 
-
 	private RestaurantService restaurantService;
 
 	@Mock

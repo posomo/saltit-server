@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class ControllerAdviceV1 implements ControllerAdvice {
-
+	@Override
 	public String baseExceptionHandler(Exception e) {
 		log.error(ErrorMessage.UNKNOWN_ERROR);
 		log.error(e.getMessage());
@@ -26,12 +26,14 @@ public class ControllerAdviceV1 implements ControllerAdvice {
 		return ResponseMessage.UNKNOWN_ERROR;
 	}
 
+	@Override
 	public String noRecordExceptionHandler(NoRecordException e) {
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
 		return ResponseMessage.RECODE_NOT_FOUND;
 	}
 
+	@Override
 	public String methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
 		log.error(e.getMessage());
 		log.error(getStackTrace(e));
