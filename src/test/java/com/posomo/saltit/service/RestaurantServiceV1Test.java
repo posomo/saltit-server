@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,7 +23,7 @@ import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
 import com.posomo.saltit.respository.RestaurantRepository;
 
 @ExtendWith(MockitoExtension.class)
-class RestaurantServiceTest {
+class RestaurantServiceV1Test {
 
 
 	private RestaurantService restaurantService;
