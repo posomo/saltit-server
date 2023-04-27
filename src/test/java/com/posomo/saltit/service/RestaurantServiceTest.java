@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,11 +26,16 @@ import com.posomo.saltit.respository.RestaurantRepository;
 @ExtendWith(MockitoExtension.class)
 class RestaurantServiceTest {
 
-	@InjectMocks
+
 	private RestaurantService restaurantService;
 
 	@Mock
 	private RestaurantRepository restaurantRepository;
+
+	@BeforeEach
+	public void initTestObject() {
+		restaurantService = new RestaurantServiceV1(restaurantRepository);
+	}
 
 	@Nested
 	@DisplayName("식당 세부 정보 조회 서비스(Entity -> DTO)")
