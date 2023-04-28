@@ -12,5 +12,5 @@ public class ErrorResponse {
 	private String message;
 
 	@Schema(description = "에러 코드", example = "400")
-	private Integer ErrorCode;
+	private Integer errorCode;
 }
