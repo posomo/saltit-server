@@ -36,13 +36,14 @@ public class RestaurantService {
 
     private Slice<RestaurantSummary> getRestaurantSummaryFromObjects(Slice<Object[]> restaurantSummaries){
         return restaurantSummaries.map(objects-> RestaurantSummary.create(
-            objects[0] == null ? null : ((String)objects[0]),
+            objects[0] == null ? null : ((Long)objects[0]),
             objects[1] == null ? null : ((String)objects[1]),
-            objects[2] == null ? null : ((Integer)objects[2]),
+            objects[2] == null ? null : ((String)objects[2]),
             objects[3] == null ? null : ((Integer)objects[3]),
-            objects[4] == null ? null : ((String)objects[4]),
+            objects[4] == null ? null : ((Integer)objects[4]),
             objects[5] == null ? null : ((String)objects[5]),
-            objects[6] == null ? null : ((Double)objects[6])
+            objects[6] == null ? null : ((String)objects[6]),
+            objects[7] == null ? null : ((Double)objects[7])
         ));
     }
 }

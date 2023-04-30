@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantSummary {
+
+    @Schema(description = "가게 ID", example = "1")
+    private Long restaurantId;
     @Schema(description = "가게 사진", defaultValue = "null")
     private String titleImageUrl;
     @Schema(description = "가게 이름", example = "육쌈냉면")
@@ -26,8 +29,8 @@ public class RestaurantSummary {
     @Schema(description = "거리(단위 m)", example = "300")
     private Double distance;
 
-    public static RestaurantSummary create(String titleImageUrl, String restaurantName, Integer rating, Integer mainMenuPrice,
+    public static RestaurantSummary create(Long restaurantId, String titleImageUrl, String restaurantName, Integer rating, Integer mainMenuPrice,
                                            String mainMenuName, String categoryName,Double distance){
-        return new RestaurantSummary(titleImageUrl,restaurantName,rating,mainMenuPrice,mainMenuName,categoryName,distance);
+        return new RestaurantSummary(restaurantId, titleImageUrl,restaurantName,rating,mainMenuPrice,mainMenuName,categoryName,distance);
     }
 }
