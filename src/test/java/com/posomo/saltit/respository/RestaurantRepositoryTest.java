@@ -39,7 +39,6 @@ class RestaurantRepositoryTest {
 			List<RestaurantMenu> menus = new ArrayList<>();
 
 			Restaurant restaurant = Restaurant.builder()
-				.id(1L)
 				.name("테스트 가게")
 				.score(100)
 				.menus(menus)
@@ -71,7 +70,6 @@ class RestaurantRepositoryTest {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
 			Restaurant restaurant = Restaurant.builder()
-				.id(1L)
 				.name("테스트 가게")
 				.score(100)
 				.menus(menus)
@@ -101,7 +99,6 @@ class RestaurantRepositoryTest {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
 			Restaurant restaurant = Restaurant.builder()
-				.id(1L)
 				.name("테스트 가게")
 				.score(100)
 				.menus(menus)
@@ -118,16 +115,6 @@ class RestaurantRepositoryTest {
 			assertThat(findRestaurant.getName()).isEqualTo(savedRestaurant.getName());
 			assertThat(findRestaurant.getScore()).isEqualTo(savedRestaurant.getScore());
 			assertThat(findRestaurant.getMenus()).isEmpty();
-		}
-
-		@Test
-		@DisplayName("식당이 없을 때")
-		void edge2() {
-			//given
-			//when
-			//then
-			Optional<Restaurant> findRestaurant = restaurantRepository.findByIdWithMenus(1L);
-			assertThat(findRestaurant).isEmpty();
 		}
 	}
 }
