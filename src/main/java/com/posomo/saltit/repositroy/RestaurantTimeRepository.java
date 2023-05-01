@@ -1,4 +1,4 @@
-package com.posomo.saltit.respository;
+package com.posomo.saltit.repositroy;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

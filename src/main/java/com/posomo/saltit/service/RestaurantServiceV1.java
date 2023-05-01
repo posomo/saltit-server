@@ -8,7 +8,7 @@ import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummaryResponse;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
-import com.posomo.saltit.respository.RestaurantRepository;
+import com.posomo.saltit.repositroy.RestaurantRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
