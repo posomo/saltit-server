@@ -53,14 +53,14 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
           
     ## deploy to main
-    - name: Deploy to main
+    - name: Deploy to main server
       uses: appleboy/ssh-action@master
       id: deploy-main
       if: contains(github.ref, 'main')
       with:
-        host: ${{ secrets.HOST_TEST }}
+        host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.REMOTE_SSH_KEY_TEST }}
+        key: ${{ secrets.REMOTE_SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
             cd /home/ubuntu/saltit-ec2-environment/
@@ -69,7 +69,7 @@ jobs:
             sudo sh release-process.sh
             
     ## deploy to main
-    - name: Deploy to main
+    - name: Deploy to test server
       uses: appleboy/ssh-action@master
       id: deploy-test-server
       if: contains(github.ref, 'main')
