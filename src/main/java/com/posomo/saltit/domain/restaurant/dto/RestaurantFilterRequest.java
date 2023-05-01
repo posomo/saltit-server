@@ -46,6 +46,13 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Double userLatitude;
 
+	public int getMaxPrice() {
+		return (maxPrice == null) ? 40000 : maxPrice;
+	}
+
+	public double getMaxDistance() {
+		return ((maxDistance == null) ? 1000D : maxDistance)/1000;
+	}
 	public String computeMySqlPoint() {
 		return "POINT(" + userLatitude + " " + userLongitude + ")";
 	}
