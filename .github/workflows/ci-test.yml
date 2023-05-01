@@ -1,4 +1,4 @@
-name: Backend-PullRequest-Build-Test
+name: Backend-Pull-Request-Build-Test
 
 # Controls when the workflow will run
 
@@ -9,8 +9,6 @@ on:
       - "feature/**"
       - "bugfix/**"
       - "refactor/**"
-    paths:
-      - "backend/**"
 
 jobs:
   # This workflow contains a single job called "build"
@@ -39,16 +37,17 @@ jobs:
           (__) (__)   (__)   (__)_)       (__)  (__)  (__)(__)  (__)\_) (__)"
         shell: bash
 
-      - name: make application-secret.yml
+      - name: make application.yml
         run: |
-          cd ./backend/src/main/resources
-          touch ./application-secret.yml
-          echo "${{ secrets.TEST_YML }}" > ./application-secret.yml
+          mkdir ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.TEST_YML }}" > ./application.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
         run: |
-          cd ./backend
+          cd ./
           chmod +x ./gradlew
         shell: bash
 
@@ -57,11 +56,11 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          cd ./backend
+          cd ./
           ./gradlew clean build -x test
         shell: bash
 
       - name: Test with Gradle
         run: |
-          cd ./backend
+          cd ./
           ./gradlew test
