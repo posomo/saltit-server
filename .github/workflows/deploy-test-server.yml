@@ -1,8 +1,8 @@
-name: deploy
+name: deploy-test-server
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
       
 jobs:
   CI-CD:
@@ -30,10 +30,10 @@ jobs:
           
     ## create application.yml
     - name: make application.yml
-      if: contains(github.ref, 'main')
+      if: contains(github.ref, 'dev')
       run: |
-        mkdir ./src/main/resources
-        cd ./src/main/resources
+        mkdir ./src/dev/resources
+        cd ./src/dev/resources
         touch ./application.yml
         echo "${{ secrets.SECRET_YML }}" > ./application.yml
       shell: bash
@@ -44,23 +44,24 @@ jobs:
         chmod +x ./gradlew
         ./gradlew clean build --exclude-task test
     
-    ## docker build & push to main
+    ## docker build & push to dev
     - name: Docker build & push
-      if: contains(github.ref, 'main')
+      if: contains(github.ref, 'dev')
       run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
           docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} -f Dockerfile .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
           
-    ## deploy to main
-    - name: Deploy to main server
+            
+    ## deploy to dev
+    - name: Deploy to test server
       uses: appleboy/ssh-action@master
-      id: deploy-main
-      if: contains(github.ref, 'main')
+      id: deploy-test-server
+      if: contains(github.ref, 'dev')
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.HOST_TEST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.REMOTE_SSH_KEY }}
+        key: ${{ secrets.REMOTE_SSH_KEY_TEST }}
         port: ${{ secrets.SSH_PORT }}
         script: |
             cd /home/ubuntu/saltit-ec2-environment/
