@@ -1,4 +1,4 @@
-name: Backend-PullRequest-Build-Test
+name: Backend-Pull-Request-Build-Test
 
 # Controls when the workflow will run
 
@@ -9,8 +9,6 @@ on:
       - "feature/**"
       - "bugfix/**"
       - "refactor/**"
-    paths:
-      - "backend/**"
 
 jobs:
   # This workflow contains a single job called "build"
