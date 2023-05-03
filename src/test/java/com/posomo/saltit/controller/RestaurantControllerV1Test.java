@@ -22,8 +22,8 @@ import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.global.constant.ResponseMessage;
 import com.posomo.saltit.service.RestaurantService;
 
-@WebMvcTest(RestaurantController.class)
-class RestaurantControllerTest {
+@WebMvcTest(RestaurantControllerV1.class)
+class RestaurantControllerV1Test {
 
 	@Autowired
 	MockMvc mvc;
