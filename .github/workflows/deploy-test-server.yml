@@ -35,7 +35,7 @@ jobs:
         mkdir ./src/dev/resources
         cd ./src/dev/resources
         touch ./application.yml
-        echo "${{ secrets.SECRET_YML }}" > ./application.yml
+        echo "${{ secrets.TEST_YML }}" > ./application.yml
       shell: bash
       
     ## gradle build
