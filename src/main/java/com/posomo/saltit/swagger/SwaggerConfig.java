@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 public class SwaggerConfig {
 
-	@Value("${server.nginx-url}")
+	@Value("${server.nginx-url:http://localhost:8080}")
 	private String nginxUrl;
 
 	@Bean
