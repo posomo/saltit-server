@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, RestaurantRepositoryCustom {
     @Query(value = "select r.id, r.title_image_url,r.name,r.score,rm.price,rm.name,ft.name," +
             "ROUND(ST_Distance_Sphere(rl.location,ST_PointFromText(:location,4326))) as distance " +
             "from restaurant r join food_type ft on r.food_type_id = ft.id " +
