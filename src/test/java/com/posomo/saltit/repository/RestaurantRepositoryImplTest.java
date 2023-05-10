@@ -159,7 +159,7 @@ class RestaurantRepositoryImplTest {
 			.build();
 
 		RestaurantLocation location = RestaurantLocation.builder()
-			.location(factory.createPoint(new Coordinate(127.0521, 37.5033)))
+			.location(factory.createPoint(new Coordinate(12.0521, 37.5033)))
 			.restaurant(restaurant)
 			.build();
 
@@ -181,6 +181,55 @@ class RestaurantRepositoryImplTest {
 
 		// then
 		assertTrue(restaurantSummaries
+			.stream()
+			.map(RestaurantSummary::getRestaurantId)
+			.toList()
+			.contains(restaurant.getId()));
+	}
+
+	@DisplayName("QueryDSL로 필터와 검색으로 값을 가져오기 실패")
+	@Test
+	void 필터와_검색으로_값을_가져오기_실패() {
+
+		// Given
+		GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
+		List<RestaurantMenu> menus = new ArrayList<>();
+		String typeName = "한식";
+
+		FoodType foodType = FoodType.builder()
+			.name(typeName)
+			.build();
+
+		Restaurant restaurant = Restaurant.builder()
+			.name("테스트 가게")
+			.score(100)
+			.menus(menus)
+			.foodType(foodType)
+			.build();
+
+		RestaurantLocation location = RestaurantLocation.builder()
+			.location(factory.createPoint(new Coordinate(12.0521, 37.5033)))
+			.restaurant(restaurant)
+			.build();
+
+		menus.add(RestaurantMenu.builder().price(10000).restaurant(restaurant).name("테스트 음식").build());
+		menus.add(RestaurantMenu.builder().price(100000).restaurant(restaurant).build());
+		menus.add(RestaurantMenu.builder().price(5000).restaurant(restaurant).orderNumber(1).name("테스트 콜라").build());
+
+		// when
+		restaurantLocationRepository.save(location);
+		restaurant.setLocation(location);
+		restaurantRepository.save(restaurant);
+		entityManager.flush();
+		entityManager.clear();
+
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
+			new RestaurantFilterRequest(typeName, 1000.0, 1000000, 0, 100,
+				location.getLocation().getX(), location.getLocation().getY(), "양념치킨무")
+		).getContent();
+
+		// then
+		assertFalse(restaurantSummaries
 			.stream()
 			.map(RestaurantSummary::getRestaurantId)
 			.toList()
