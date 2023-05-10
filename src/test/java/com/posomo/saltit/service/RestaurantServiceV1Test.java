@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -20,16 +20,20 @@ import com.posomo.saltit.domain.exception.NoRecordException;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
-import com.posomo.saltit.respository.RestaurantRepository;
+import com.posomo.saltit.repository.RestaurantRepository;
 
 @ExtendWith(MockitoExtension.class)
-class RestaurantServiceTest {
+class RestaurantServiceV1Test {
 
-	@InjectMocks
 	private RestaurantService restaurantService;
 
 	@Mock
 	private RestaurantRepository restaurantRepository;
+
+	@BeforeEach
+	public void initTestObject() {
+		restaurantService = new RestaurantServiceV1(restaurantRepository);
+	}
 
 	@Nested
 	@DisplayName("식당 세부 정보 조회 서비스(Entity -> DTO)")
@@ -39,12 +43,12 @@ class RestaurantServiceTest {
 		void ok() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
-			menus.add(new RestaurantMenu(1L, null, "mainMenu1", 10000, null, null, true));
-			menus.add(new RestaurantMenu(2L, null, "mainMenu2", 8000, null, null, true));
-			menus.add(new RestaurantMenu(3L, null, "mainMenu3", 11000, null, null, true));
-			menus.add(new RestaurantMenu(4L, null, "sideMenu1", 2000, null, null, false));
-			menus.add(new RestaurantMenu(5L, null, "sideMenu2", 1000, null, null, false));
-			Restaurant restaurant = Restaurant.create(1L, null, "테스트 식당", null, 100, null, null, menus, null, null, null);
+			menus.add(RestaurantMenu.builder().id(1L).name("mainMenu1").price(10000).mainMenu(true).build());
+			menus.add(RestaurantMenu.builder().id(2L).name("mainMenu2").price(8000).mainMenu(true).build());
+			menus.add(RestaurantMenu.builder().id(3L).name("mainMenu3").price(11000).mainMenu(true).build());
+			menus.add(RestaurantMenu.builder().id(4L).name("sideMenu1").price(2000).mainMenu(false).build());
+			menus.add(RestaurantMenu.builder().id(5L).name("sideMenu2").price(1000).mainMenu(false).build());
+			Restaurant restaurant = Restaurant.builder().id(1L).name("테스트 식당").score(100).menus(menus).build();
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
@@ -81,8 +85,7 @@ class RestaurantServiceTest {
 		void edge1() {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
-			Restaurant restaurant = Restaurant.create(1L, null, "테스트 식당", null, 100, null, null, menus, null, null,
-				null);
+			Restaurant restaurant = Restaurant.builder().id(1L).name("테스트 식당").score(100).menus(menus).build();
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
