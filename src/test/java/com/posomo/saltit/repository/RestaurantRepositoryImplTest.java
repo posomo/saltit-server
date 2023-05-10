@@ -1,6 +1,5 @@
 package com.posomo.saltit.repository;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -9,18 +8,12 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.CoordinateXY;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.posomo.saltit.TestConfig;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
@@ -29,7 +22,6 @@ import com.posomo.saltit.domain.restaurant.entity.FoodType;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantLocation;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
-import com.posomo.saltit.repository.RestaurantRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -84,10 +76,10 @@ class RestaurantRepositoryImplTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantBy(
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
 			new RestaurantFilterRequest(typeName, 10.0, 1000000, 0, 100,
 				location.getLocation().getX(), location.getLocation().getY())
-		);
+		).getContent();
 
 		// then
 		assertTrue(restaurantSummaries
@@ -133,10 +125,10 @@ class RestaurantRepositoryImplTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantBy(
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
 			new RestaurantFilterRequest(typeName, 10000.0, 1000000, 0, 100,
 				10.0, 10.0)
-		);
+		).getContent();
 
 		// then
 		assertFalse(restaurantSummaries
@@ -182,10 +174,10 @@ class RestaurantRepositoryImplTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantBy(
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
 			new RestaurantFilterRequest(typeName, 1000.0, 1000000, 0, 100,
 				location.getLocation().getX(), location.getLocation().getY(), "테스트")
-		);
+		).getContent();
 
 		// then
 		assertTrue(restaurantSummaries

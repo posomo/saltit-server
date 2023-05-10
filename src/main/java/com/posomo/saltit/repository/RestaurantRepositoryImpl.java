@@ -2,6 +2,10 @@ package com.posomo.saltit.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
@@ -29,20 +33,33 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<RestaurantSummary> findRestaurantBy(RestaurantFilterRequest filterRequest) {
+	public Slice<RestaurantSummary> findRestaurantByFilterRequest(RestaurantFilterRequest filterRequest) {
+		Pageable pageable = filterRequest.createPageRequest();
+
 		if (filterRequest.getSearch() == null) {
-			return getRestaurantSummariesNotContainSearch(filterRequest);
+			return getRestaurantSummarySlice(getRestaurantSummariesNotContainSearch(filterRequest, pageable), pageable);
 		}
-		return getRestaurantSummariesContainSearch(filterRequest);
+		return getRestaurantSummarySlice(getRestaurantSummariesContainSearch(filterRequest, pageable), pageable);
 	}
 
-	private List<RestaurantSummary> getRestaurantSummariesNotContainSearch(RestaurantFilterRequest filterRequest) {
+	private SliceImpl<RestaurantSummary> getRestaurantSummarySlice(List<RestaurantSummary> content,
+		Pageable pageable) {
+		boolean hasNext = false;
+		if (content.size() > pageable.getPageSize()) {
+			content.remove(pageable.getPageSize());
+			hasNext = true;
+		}
+		SliceImpl<RestaurantSummary> summaries = new SliceImpl<>(content, pageable, hasNext);
+		return summaries;
+	}
+
+	private List<RestaurantSummary> getRestaurantSummariesNotContainSearch(RestaurantFilterRequest filterRequest,
+		Pageable pageable) {
 
 		QRestaurant restaurant = QRestaurant.restaurant;
 		QFoodType foodType = QFoodType.foodType;
 		QRestaurantMenu restaurantMenu = QRestaurantMenu.restaurantMenu;
 		QRestaurantLocation restaurantLocation = QRestaurantLocation.restaurantLocation;
-
 		return jpaQueryFactory
 			.select(getRestaurantSummaryConstructorExpression(restaurant, foodType, restaurantMenu,
 				getDoubleDistanceExpression(restaurantLocation, filterRequest.computeMySqlPoint())))
@@ -55,12 +72,13 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			.where(
 				withInByDistance(restaurantLocation, filterRequest.computeMySqlPoint(), filterRequest.getMaxDistance()))
 			.orderBy(restaurant.score.desc())
-			.offset(filterRequest.getPage())
-			.limit(filterRequest.getSize())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
 			.fetch();
 	}
 
-	private List<RestaurantSummary> getRestaurantSummariesContainSearch(RestaurantFilterRequest filterRequest) {
+	private List<RestaurantSummary> getRestaurantSummariesContainSearch(RestaurantFilterRequest filterRequest,
+		Pageable pageable) {
 
 		QRestaurant restaurant = QRestaurant.restaurant;
 		QFoodType foodType = QFoodType.foodType;
@@ -87,8 +105,8 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 				.or(restaurant.name.like("%" + filterRequest.getSearch() + "%")))
 			.orderBy(restaurant.score.desc())
 			.groupBy(restaurant.id)
-			.offset(filterRequest.getPage())
-			.limit(filterRequest.getSize())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
 			.fetch();
 	}
 
