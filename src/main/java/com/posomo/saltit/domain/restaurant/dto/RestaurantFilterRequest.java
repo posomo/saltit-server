@@ -51,7 +51,7 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Double userLatitude;
 
-	@Schema(description = "검색 문자 (사용 시 1글자 이상, 사용하지 않으면 json body에 적지 않는다)", example = "낙지")
+	@Schema(description = "검색 문자 (사용 시 1글자~20글자 사이, 사용하지 않으면 json body에 적지 않는다)", example = "낙지")
 	@Nullable
 	@Length(min = 1, max = 20)
 	private String search;
