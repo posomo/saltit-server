@@ -22,6 +22,7 @@ import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
 import com.posomo.saltit.repository.RestaurantRepository;
 
+
 @ExtendWith(MockitoExtension.class)
 class RestaurantServiceV1Test {
 

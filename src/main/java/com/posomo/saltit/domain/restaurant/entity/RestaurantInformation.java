@@ -2,7 +2,6 @@ package com.posomo.saltit.domain.restaurant.entity;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

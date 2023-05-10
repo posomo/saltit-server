@@ -1,7 +1,6 @@
 package com.posomo.saltit.service;
 
 import org.springframework.data.domain.Slice;
-import org.springframework.stereotype.Service;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;

@@ -2,7 +2,6 @@ package com.posomo.saltit.domain.restaurant.entity;
 
 import org.locationtech.jts.geom.Point;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
