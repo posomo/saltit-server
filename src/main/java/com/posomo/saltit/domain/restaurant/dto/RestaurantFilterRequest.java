@@ -30,7 +30,7 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Integer maxPrice;
 
-	@Schema(description = "요청 페이지 번호 (0부터 시작)", example = "1")
+	@Schema(description = "요청 페이지 번호 (0부터 시작)", example = "0")
 	@PositiveOrZero
 	@NotNull
 	private Integer page;
