@@ -25,7 +25,7 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Double maxDistance;
 
-	@Schema(description = "가격 상한선", example = "8500", defaultValue = "40000")
+	@Schema(description = "가격 상한선", example = "9500", defaultValue = "40000")
 	@Positive
 	@NotNull
 	private Integer maxPrice;

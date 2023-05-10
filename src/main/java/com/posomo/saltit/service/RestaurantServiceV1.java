@@ -12,9 +12,8 @@ import com.posomo.saltit.repository.RestaurantRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@Service
+// @Service
 @RequiredArgsConstructor
 @Transactional
 public class RestaurantServiceV1 implements RestaurantService {

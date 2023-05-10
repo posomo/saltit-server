@@ -37,4 +37,12 @@ public class RestaurantSummaryResponse {
 
 		return new RestaurantSummaryResponse(restaurantSummaries, hasNext, pageNumber, pageSize);
 	}
+
+	public static RestaurantSummaryResponse ofSummary(Slice<RestaurantSummary> restaurantSummarySlice) {
+		List<RestaurantSummary> restaurantSummaries = restaurantSummarySlice.stream().toList();
+		boolean hasNext = restaurantSummarySlice.hasNext();
+		Integer pageNumber = restaurantSummarySlice.getPageable().getPageNumber();
+		Integer pageSize = restaurantSummarySlice.getPageable().getPageSize();
+		return new RestaurantSummaryResponse(restaurantSummaries, hasNext, pageNumber, pageSize);
+	}
 }

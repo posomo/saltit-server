@@ -1,7 +1,5 @@
 package com.posomo.saltit.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +14,7 @@ import com.posomo.saltit.repository.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-// @Service
+@Service
 @RequiredArgsConstructor
 @Transactional
 public class RestaurantServiceV2 implements RestaurantService {
@@ -24,15 +22,9 @@ public class RestaurantServiceV2 implements RestaurantService {
 
 	@Override
 	public RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest) {
-		List<RestaurantSummary> restaurant = restaurantRepository.findRestaurantBy(filterRequest);
-		Slice<Object[]> resultObjects = restaurantRepository.findRestaurantByFilter(
-			filterRequest.getMaxPrice(),
-			filterRequest.getFoodTypeName(),
-			filterRequest.computeMySqlPoint(),
-			filterRequest.getMaxDistance(),
-			filterRequest.createPageRequest()
-		);
-		return RestaurantSummaryResponse.of(resultObjects);
+		Slice<RestaurantSummary> restaurantByFilterRequest = restaurantRepository.findRestaurantByFilterRequest(
+			filterRequest);
+		return RestaurantSummaryResponse.ofSummary(restaurantByFilterRequest);
 	}
 
 	@Override
