@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.stream.Collectors;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -53,6 +54,13 @@ public class ControllerAdviceV1 implements ControllerAdvice {
 		);
 		sb.append(ResponseMessage.INVALID_PARAM);
 		return sb.toString();
+	}
+
+	@Override
+	public String httpMessageNotReadableException(HttpMessageNotReadableException e) {
+		log.error(e.getMessage());
+		log.error(getStackTrace(e));
+		return ResponseMessage.INVALID_MESSAGE;
 	}
 
 	private String getStackTrace(Throwable t) {

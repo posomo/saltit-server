@@ -8,4 +8,6 @@ public class ResponseMessage {
 	public static final String RECODE_NOT_FOUND = "해당 레코드는 존재하지 않습니다.";
 	public static final String MISMATCH_PARAM = "파라미터의 형식이 잘못되었습니다.";
 	public static final String INVALID_PARAM = "파라미터가 잘못되었습니다.";
+
+	public static final String INVALID_MESSAGE = "BODY 형식을 읽을 수 없습니다.";
 }

@@ -1,9 +1,12 @@
 package com.posomo.saltit.domain.restaurant.dto;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -49,6 +52,8 @@ public class RestaurantFilterRequest {
 	private Double userLatitude;
 
 	@Schema(description = "검색 문자", example = "낙지")
+	@Nullable
+	@Length(min = 1, max = 20)
 	private String search;
 
 	public int getMaxPrice() {
