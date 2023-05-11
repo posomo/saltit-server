@@ -1,19 +1,24 @@
 package com.posomo.saltit.domain.restaurant.dto;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "홈 화면 레스토랑 필터 요청 정보 (/api/v1/home/restaurant-summary)")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class RestaurantFilterRequest {
 	@Schema(description = "식당 카테고리 이름", example = "한식", defaultValue = "null")
 	private String foodTypeName;
@@ -23,12 +28,12 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Double maxDistance;
 
-	@Schema(description = "가격 상한선", example = "8500", defaultValue = "40000")
+	@Schema(description = "가격 상한선", example = "9500", defaultValue = "40000")
 	@Positive
 	@NotNull
 	private Integer maxPrice;
 
-	@Schema(description = "요청 페이지 번호 (0부터 시작)", example = "1")
+	@Schema(description = "요청 페이지 번호 (0부터 시작)", example = "0")
 	@PositiveOrZero
 	@NotNull
 	private Integer page;
@@ -46,6 +51,11 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Double userLatitude;
 
+	@Schema(description = "검색 문자 (사용 시 1글자~20글자 사이, 사용하지 않으면 json body에 적지 않는다)", example = "낙지")
+	@Nullable
+	@Length(min = 1, max = 20)
+	private String search;
+
 	public int getMaxPrice() {
 		return (maxPrice == null) ? 40000 : maxPrice;
 	}
@@ -59,5 +69,17 @@ public class RestaurantFilterRequest {
 
 	public Pageable createPageRequest() {
 		return PageRequest.of(page, size);
+	}
+
+	public RestaurantFilterRequest(String foodTypeName, Double maxDistance, Integer maxPrice, Integer page,
+		Integer size,
+		Double userLongitude, Double userLatitude) {
+		this.foodTypeName = foodTypeName;
+		this.maxDistance = maxDistance;
+		this.maxPrice = maxPrice;
+		this.page = page;
+		this.size = size;
+		this.userLongitude = userLongitude;
+		this.userLatitude = userLatitude;
 	}
 }
