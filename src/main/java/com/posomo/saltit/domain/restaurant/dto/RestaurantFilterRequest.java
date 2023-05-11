@@ -56,6 +56,10 @@ public class RestaurantFilterRequest {
 	@Length(min = 1, max = 20)
 	private String search;
 
+	@Schema(description = "별점순, 거리순, 리뷰순. default 별점순", example = "거리순")
+	@Nullable
+	private String sort;
+
 	public int getMaxPrice() {
 		return (maxPrice == null) ? 40000 : maxPrice;
 	}
