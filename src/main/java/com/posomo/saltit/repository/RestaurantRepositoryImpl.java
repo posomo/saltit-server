@@ -43,14 +43,19 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 	@Override
 	public Slice<RestaurantSummary> findRestaurantByFilterRequest(RestaurantFilterRequest filterRequest) {
 		Pageable pageable = filterRequest.createPageRequest();
+
+		List<RestaurantSummary> content;
 		if (filterRequest.getSearch() == null) {
-			return getRestaurantSummarySlice(getRestaurantSummariesNotContainSearch(filterRequest, pageable), pageable);
+			content = getRestaurantSummariesNotContainSearch(filterRequest, pageable);
+		} else {
+			content = getRestaurantSummariesContainSearch(filterRequest, pageable);
 		}
-		return getRestaurantSummarySlice(getRestaurantSummariesContainSearch(filterRequest, pageable), pageable);
+
+		return getSummarySlice(pageable, content);
 	}
 
-	private SliceImpl<RestaurantSummary> getRestaurantSummarySlice(List<RestaurantSummary> content,
-		Pageable pageable) {
+	private SliceImpl<RestaurantSummary> getSummarySlice(Pageable pageable,
+		List<RestaurantSummary> content) {
 		boolean hasNext = false;
 		if (content.size() > pageable.getPageSize()) {
 			content.remove(pageable.getPageSize());
