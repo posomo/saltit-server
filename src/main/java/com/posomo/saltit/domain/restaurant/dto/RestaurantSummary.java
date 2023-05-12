@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "레스토랑 정보")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantSummary {
 	@Schema(description = "가게 ID", example = "1")
