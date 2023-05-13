@@ -45,7 +45,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 		Pageable pageable = filterRequest.createPageRequest();
 
 		List<RestaurantSummary> content;
-		if (filterRequest.getSearch() == null) {
+		if (filterRequest.getOptions().getSearch() == null) {
 			content = getRestaurantSummariesNotContainSearch(filterRequest, pageable);
 		} else {
 			content = getRestaurantSummariesContainSearch(filterRequest, pageable);
@@ -81,9 +81,9 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(filterRequest, pageable)
 			.leftJoin(restaurant.categories, restaurantCategory)
 			.leftJoin(restaurantCategory.category, category)
-			.where(category.name.like("%" + filterRequest.getSearch() + "%")
-				.or(restaurantMenu.name.like("%" + filterRequest.getSearch() + "%"))
-				.or(restaurant.name.like("%" + filterRequest.getSearch() + "%")))
+			.where(category.name.like("%" + filterRequest.getOptions().getSearch() + "%")
+				.or(restaurantMenu.name.like("%" + filterRequest.getOptions().getSearch() + "%"))
+				.or(restaurant.name.like("%" + filterRequest.getOptions().getSearch() + "%")))
 			.groupBy(restaurant.id);
 
 		addOrderStandard(filterRequest, restaurantSummaryJPAQuery);
@@ -140,7 +140,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 
 	private void addOrderStandard(RestaurantFilterRequest filterRequest,
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery) {
-		if (filterRequest.getSort() == null || !filterRequest.getSort().equals("거리순")) {
+		if (filterRequest.getOptions().getSort() == null || !filterRequest.getOptions().getSort().equals("거리순")) {
 			// default 별점순
 			restaurantSummaryJPAQuery.orderBy(restaurant.score.desc());
 		} else {

@@ -126,7 +126,7 @@ class RestaurantRepositoryImplTest {
 		// when
 		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
 			new RestaurantFilterRequest("한식", 1000.0, 1000000, 0, 100,
-				12.0521, 37.5033, "테스트", null)
+				12.0521, 37.5033, new RestaurantFilterRequest.Options("테스트", null))
 		).getContent();
 
 		// then
@@ -147,7 +147,7 @@ class RestaurantRepositoryImplTest {
 		// when
 		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
 			new RestaurantFilterRequest("한식", 1000.0, 1000000, 0, 100,
-				12.0521, 37.5033, "양념치킨무", null)
+				12.0521, 37.5033, new RestaurantFilterRequest.Options("양념치킨", null))
 		).getContent();
 
 		// then
