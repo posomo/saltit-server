@@ -5,25 +5,23 @@ import java.io.IOException;
 import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @Order(0)
 @RequiredArgsConstructor
-public class MDCServiceFilter implements Filter {
+public class MDCServiceFilter extends OncePerRequestFilter {
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		MDC.put("transactionId", httpRequest.getHeader("X-Transaction-Id"));
-		chain.doFilter(request, response);
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+		MDC.put("transactionId", request.getHeader("X-Transaction-Id"));
+		filterChain.doFilter(request, response);
 		MDC.clear();
 	}
 }
