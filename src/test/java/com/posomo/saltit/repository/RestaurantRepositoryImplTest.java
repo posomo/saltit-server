@@ -61,9 +61,9 @@ class RestaurantRepositoryImplTest {
 			.restaurant(restaurant)
 			.build();
 
-		menus.add(RestaurantMenu.builder().price(10000).restaurant(restaurant).name("테스트 음식").build());
+		menus.add(RestaurantMenu.builder().price(10000).restaurant(restaurant).mainMenu(true).name("테스트 음식").build());
 		menus.add(RestaurantMenu.builder().price(100000).restaurant(restaurant).build());
-		menus.add(RestaurantMenu.builder().price(5000).restaurant(restaurant).orderNumber(1).name("테스트 콜라").build());
+		menus.add(RestaurantMenu.builder().price(5000).restaurant(restaurant).orderNumber(1).mainMenu(true).name("테스트 콜라").build());
 
 		// when
 		restaurantLocationRepository.save(location);

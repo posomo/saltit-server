@@ -32,8 +32,23 @@ public class RestaurantSummary {
 	@Schema(description = "식당 카테고리 이름", example = "한식")
 	private String categoryName;
 
+	@Schema(description = "가격 내에 메뉴 갯수", example = "5")
+	private Long menuSize;
+
 	@Schema(description = "거리(단위 m)", example = "300")
 	private Double distance;
+
+	public RestaurantSummary(Long restaurantId, String titleImageUrl, String restaurantName, Integer rating,
+		Integer mainMenuPrice, String mainMenuName, String categoryName, Double distance) {
+		this.restaurantId = restaurantId;
+		this.titleImageUrl = titleImageUrl;
+		this.restaurantName = restaurantName;
+		this.rating = rating;
+		this.mainMenuPrice = mainMenuPrice;
+		this.mainMenuName = mainMenuName;
+		this.categoryName = categoryName;
+		this.distance = distance;
+	}
 
 	public static RestaurantSummary of(Object[] objects) {
 		return new RestaurantSummary(

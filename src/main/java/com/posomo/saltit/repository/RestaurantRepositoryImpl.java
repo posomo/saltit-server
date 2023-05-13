@@ -43,14 +43,19 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 	@Override
 	public Slice<RestaurantSummary> findRestaurantByFilterRequest(RestaurantFilterRequest filterRequest) {
 		Pageable pageable = filterRequest.createPageRequest();
+
+		List<RestaurantSummary> content;
 		if (filterRequest.getSearch() == null) {
-			return getRestaurantSummarySlice(getRestaurantSummariesNotContainSearch(filterRequest, pageable), pageable);
+			content = getRestaurantSummariesNotContainSearch(filterRequest, pageable);
+		} else {
+			content = getRestaurantSummariesContainSearch(filterRequest, pageable);
 		}
-		return getRestaurantSummarySlice(getRestaurantSummariesContainSearch(filterRequest, pageable), pageable);
+
+		return getSummarySlice(pageable, content);
 	}
 
-	private SliceImpl<RestaurantSummary> getRestaurantSummarySlice(List<RestaurantSummary> content,
-		Pageable pageable) {
+	private SliceImpl<RestaurantSummary> getSummarySlice(Pageable pageable,
+		List<RestaurantSummary> content) {
 		boolean hasNext = false;
 		if (content.size() > pageable.getPageSize()) {
 			content.remove(pageable.getPageSize());
@@ -63,7 +68,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 		Pageable pageable) {
 
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(filterRequest, pageable)
-			.where(restaurantMenu.orderNumber.eq(1));
+			.groupBy(restaurant.id);
 
 		addOrderStandard(filterRequest, restaurantSummaryJPAQuery);
 		return restaurantSummaryJPAQuery
@@ -99,6 +104,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			.where(foodType.name.eq(filterRequest.getFoodTypeName()))
 			.where(
 				withInByDistance(restaurantLocation, filterRequest.computeMySqlPoint(), filterRequest.getMaxDistance()))
+			.where(restaurantMenu.mainMenu.eq(true))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1);
 	}
@@ -114,6 +120,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			restaurantMenu.price,
 			restaurantMenu.name,
 			foodType.name,
+			restaurant.id.count(),
 			numberExpression);
 	}
 
