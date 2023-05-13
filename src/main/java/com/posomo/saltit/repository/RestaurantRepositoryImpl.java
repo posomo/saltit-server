@@ -68,7 +68,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 		Pageable pageable) {
 
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(filterRequest, pageable)
-			.where(restaurantMenu.orderNumber.eq(1));
+			.groupBy(restaurant.id);
 
 		addOrderStandard(filterRequest, restaurantSummaryJPAQuery);
 		return restaurantSummaryJPAQuery
@@ -104,6 +104,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			.where(foodType.name.eq(filterRequest.getFoodTypeName()))
 			.where(
 				withInByDistance(restaurantLocation, filterRequest.computeMySqlPoint(), filterRequest.getMaxDistance()))
+			.where(restaurantMenu.mainMenu.eq(true))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1);
 	}
@@ -119,6 +120,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			restaurantMenu.price,
 			restaurantMenu.name,
 			foodType.name,
+			restaurant.id.count(),
 			numberExpression);
 	}
 
