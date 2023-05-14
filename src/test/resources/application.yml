@@ -1,7 +1,3 @@
 spring:
   profiles:
-    active: prod-test
-  group:
-    prod-test:
-      - prod
-      - test
+    active: prod

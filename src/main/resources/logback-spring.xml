@@ -39,7 +39,8 @@
     </springProfile>
 
     <springProfile name="prod">
-        <property name="LOG_PATH" value="/home/saltit-api-server/logs"/>
+        <property name="LOG_PATH" value="./logs"/>
+<!--        <property name="LOG_PATH" value="/home/saltit-api-server/logs"/>-->
         <root level="INFO">
             <appender-ref ref="ASYNC_FILE" />
         </root>
