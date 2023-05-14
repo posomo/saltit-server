@@ -39,7 +39,6 @@ jobs:
 
       - name: make application.yml
         run: |
-          mkdir ./src/main/resources
           cd ./src/main/resources
           touch ./application-prod.yml
           echo "${{ secrets.TEST_YML }}" > ./application-prod.yml
