@@ -35,8 +35,14 @@ public class RestaurantSummary {
 	@Schema(description = "가격 내에 메뉴 갯수", example = "5")
 	private Long menuSize;
 
+	@Schema(description = "경도 값", example = "127.0502")
+	private Double longitude;
+
+	@Schema(description = "위도 값", example = "37.6033")
+	private Double latitude;
 	@Schema(description = "거리(단위 m)", example = "300")
 	private Double distance;
+
 
 	public RestaurantSummary(Long restaurantId, String titleImageUrl, String restaurantName, Integer rating,
 		Integer mainMenuPrice, String mainMenuName, String categoryName, Double distance) {

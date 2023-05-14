@@ -94,8 +94,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 	private JPAQuery<RestaurantSummary> defaultJpaQuery(RestaurantFilterRequest filterRequest, Pageable pageable) {
 		return jpaQueryFactory
 			.select(getRestaurantSummaryConstructorExpression(restaurant, foodType, restaurantMenu,
-				getDoubleDistanceExpression(restaurantLocation,
-					filterRequest.computeMySqlPoint())))
+				getDoubleDistanceExpression(filterRequest.computeMySqlPoint())))
 			.from(restaurant)
 			.innerJoin(restaurant.menus, restaurantMenu)
 			.innerJoin(restaurant.location, restaurantLocation)
@@ -121,6 +120,8 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			restaurantMenu.name,
 			foodType.name,
 			restaurant.id.count(),
+			getLongitudeExpression(),
+			getLatitudeExpression(),
 			numberExpression);
 	}
 
@@ -131,12 +132,27 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			restaurantLocation.location, userPoint, distance);
 	}
 
-	private NumberExpression<Double> getDoubleDistanceExpression(QRestaurantLocation restaurantLocation, String point) {
+	private NumberExpression<Double> getDoubleDistanceExpression(String point) {
 		return Expressions
 			.numberTemplate(Double.class,
 				"ST_Distance_Sphere({0}, ST_PointFromText({1}, 4326))",
 				restaurantLocation.location, point);
 	}
+
+	private NumberExpression<Double> getLatitudeExpression() {
+		return Expressions
+			.numberTemplate(Double.class,
+				"ST_X({0}) AS latitude",
+				restaurantLocation.location);
+	}
+
+	private NumberExpression<Double> getLongitudeExpression() {
+		return Expressions
+			.numberTemplate(Double.class,
+				"ST_Y({0}) AS longitude",
+				restaurantLocation.location);
+	}
+
 
 	private void addOrderStandard(RestaurantFilterRequest filterRequest,
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery) {
@@ -144,8 +160,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			// default 별점순
 			restaurantSummaryJPAQuery.orderBy(restaurant.score.desc());
 		} else {
-			restaurantSummaryJPAQuery.orderBy(getDoubleDistanceExpression(restaurantLocation,
-				filterRequest.computeMySqlPoint()).asc());
+			restaurantSummaryJPAQuery.orderBy(getDoubleDistanceExpression(filterRequest.computeMySqlPoint()).asc());
 		}
 	}
 }
