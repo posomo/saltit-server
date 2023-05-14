@@ -17,6 +17,7 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 **/application-*.yml
+/src/test/resources/application*.yml
 **/application.properties
 
 ## P6spy ##
