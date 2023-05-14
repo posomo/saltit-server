@@ -30,7 +30,7 @@
 
 
     <!-- Spring Profiles -->
-    <springProfile name="local">
+    <springProfile name="local, test">
         <property name="LOG_PATH" value="./logs"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
