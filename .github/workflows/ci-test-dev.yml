@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir ./src/main/resources
           cd ./src/main/resources
-          touch ./application.yml
+          touch ./application-prod.yml
           echo "${{ secrets.TEST_YML }}" > ./application-prod.yml
         shell: bash
 
