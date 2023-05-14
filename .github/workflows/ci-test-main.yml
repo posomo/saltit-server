@@ -39,10 +39,9 @@ jobs:
 
       - name: make application.yml
         run: |
-          mkdir ./src/main/resources
           cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.TEST_YML }}" > ./application.yml
+          touch ./application-test.yml
+          echo "${{ secrets.TEST_YML }}" > ./application-test.yml
         shell: bash
 
       - name: Grant execute permission for gradlew

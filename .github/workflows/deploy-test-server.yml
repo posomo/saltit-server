@@ -32,10 +32,9 @@ jobs:
     - name: make application.yml
       if: contains(github.ref, 'dev')
       run: |
-        mkdir ./src/main/resources
         cd ./src/main/resources
-        touch ./application.yml
-        echo "${{ secrets.TEST_YML }}" > ./application.yml
+        touch ./application-prod.yml
+        echo "${{ secrets.TEST_YML }}" > ./application-prod.yml
       shell: bash
       
     ## gradle build

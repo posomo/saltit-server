@@ -7,12 +7,14 @@ import org.springframework.data.domain.Pageable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -51,10 +53,23 @@ public class RestaurantFilterRequest {
 	@NotNull
 	private Double userLatitude;
 
-	@Schema(description = "검색 문자 (사용 시 1글자~20글자 사이, 사용하지 않으면 json body에 적지 않는다)", example = "낙지")
+	@Valid
 	@Nullable
-	@Length(min = 1, max = 20)
-	private String search;
+	private Options options = new Options();
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@AllArgsConstructor
+	@Getter
+	public static class Options {
+		@Schema(description = "검색 문자 (사용 시 1글자~20글자 사이, 사용하지 않으면 json body에 적지 않는다)", example = "국밥")
+		@Nullable
+		@Length(min = 1, max = 20)
+		private String search;
+
+		@Schema(description = "별점순, 거리순, 리뷰순. default 별점순", example = "거리순")
+		@Nullable
+		private String sort;
+	}
 
 	public int getMaxPrice() {
 		return (maxPrice == null) ? 40000 : maxPrice;
