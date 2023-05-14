@@ -42,7 +42,7 @@ jobs:
           mkdir ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml
-          echo "${{ secrets.TEST_YML }}" > ./application.yml
+          echo "${{ secrets.TEST_YML }}" > ./application-prod.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
