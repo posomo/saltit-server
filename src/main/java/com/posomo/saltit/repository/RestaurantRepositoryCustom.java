@@ -7,5 +7,7 @@ import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
 
 public interface RestaurantRepositoryCustom {
 
-	Slice<RestaurantSummary> findRestaurantByFilterRequest(RestaurantFilterRequest restaurantFilterRequest);
+	Slice<RestaurantSummary> searchRestaurant(RestaurantFilterRequest filterRequest);
+
+	Slice<RestaurantSummary> searchRestaurantContainStringSearch(RestaurantFilterRequest filterRequest);
 }

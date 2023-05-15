@@ -41,17 +41,16 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 	QCategory category = QCategory.category;
 
 	@Override
-	public Slice<RestaurantSummary> findRestaurantByFilterRequest(RestaurantFilterRequest filterRequest) {
+	public Slice<RestaurantSummary> searchRestaurant(RestaurantFilterRequest filterRequest) {
 		Pageable pageable = filterRequest.createPageRequest();
+		return getSummarySlice(pageable, getRestaurantSummariesNotContainSearch(filterRequest, pageable));
+	}
 
-		List<RestaurantSummary> content;
-		if (filterRequest.getOptions().getSearch() == null) {
-			content = getRestaurantSummariesNotContainSearch(filterRequest, pageable);
-		} else {
-			content = getRestaurantSummariesContainSearch(filterRequest, pageable);
-		}
-
-		return getSummarySlice(pageable, content);
+	@Override
+	public Slice<RestaurantSummary> searchRestaurantContainStringSearch(
+		RestaurantFilterRequest filterRequest) {
+		Pageable pageable = filterRequest.createPageRequest();
+		return getSummarySlice(pageable, getRestaurantSummariesContainSearch(filterRequest, pageable));
 	}
 
 	private SliceImpl<RestaurantSummary> getSummarySlice(Pageable pageable,

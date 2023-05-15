@@ -22,14 +22,18 @@ public class RestaurantServiceV2 implements RestaurantService {
 
 	@Override
 	public RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest) {
-		Slice<RestaurantSummary> restaurantByFilterRequest = restaurantRepository.findRestaurantByFilterRequest(
-			filterRequest);
-		return RestaurantSummaryResponse.ofSummary(restaurantByFilterRequest);
+		if (filterRequest.getOptions().getSearch() == null) {
+			return RestaurantSummaryResponse.ofSummary(
+				restaurantRepository.searchRestaurant(filterRequest));
+		}
+		return RestaurantSummaryResponse.ofSummary(
+			restaurantRepository.searchRestaurantContainStringSearch(filterRequest));
 	}
 
 	@Override
 	public RestaurantDetailResponse getRestaurantDetail(long restaurantId) {
-		Restaurant restaurant = restaurantRepository.findByIdWithMenus(restaurantId).orElseThrow(NoRecordException::new);
+		Restaurant restaurant = restaurantRepository.findByIdWithMenus(restaurantId)
+			.orElseThrow(NoRecordException::new);
 		return RestaurantDetailResponse.of(restaurant);
 	}
 }
