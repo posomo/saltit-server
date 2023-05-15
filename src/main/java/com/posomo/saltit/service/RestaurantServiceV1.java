@@ -22,7 +22,7 @@ public class RestaurantServiceV1 implements RestaurantService {
 	public RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest) {
 		Slice<Object[]> resultObjects = restaurantRepository.findRestaurantByFilter(
 			filterRequest.getMaxPrice(),
-			filterRequest.getFoodTypeName(),
+			filterRequest.getOptions().getFoodTypeName(),
 			filterRequest.computeMySqlPoint(),
 			filterRequest.getMaxDistance(),
 			filterRequest.createPageRequest()

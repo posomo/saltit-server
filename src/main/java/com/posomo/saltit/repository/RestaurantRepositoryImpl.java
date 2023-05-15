@@ -19,6 +19,7 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -99,7 +100,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			.innerJoin(restaurant.location, restaurantLocation)
 			.innerJoin(restaurant.foodType, foodType)
 			.where(restaurantMenu.price.loe(filterRequest.getMaxPrice()))
-			.where(foodType.name.eq(filterRequest.getFoodTypeName()))
+			.where(foodTypeNameEq(filterRequest.getOptions().getFoodTypeName()))
 			.where(
 				withInByDistance(restaurantLocation, filterRequest.computeMySqlPoint(), filterRequest.getMaxDistance()))
 			.where(restaurantMenu.mainMenu.eq(true))
@@ -122,6 +123,10 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			getLongitudeExpression(),
 			getLatitudeExpression(),
 			numberExpression);
+	}
+
+	private BooleanExpression foodTypeNameEq(String foodTypeName) {
+		return foodTypeName != null ? foodType.name.eq(foodTypeName) : null;
 	}
 
 	private BooleanTemplate withInByDistance(QRestaurantLocation restaurantLocation, String userPoint,

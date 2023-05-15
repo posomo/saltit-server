@@ -22,8 +22,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class RestaurantFilterRequest {
-	@Schema(description = "식당 카테고리 이름", example = "한식", defaultValue = "null")
-	private String foodTypeName;
 
 	@Schema(description = "최대 검색 거리(m)", example = "1000", defaultValue = "10000")
 	@PositiveOrZero
@@ -69,6 +67,9 @@ public class RestaurantFilterRequest {
 		@Schema(description = "별점순, 거리순, 리뷰순. default 별점순", example = "거리순")
 		@Nullable
 		private String sort;
+
+		@Schema(description = "식당 카테고리 이름", example = "한식", defaultValue = "null")
+		private String foodTypeName;
 	}
 
 	public int getMaxPrice() {
@@ -89,7 +90,7 @@ public class RestaurantFilterRequest {
 	public RestaurantFilterRequest(String foodTypeName, Double maxDistance, Integer maxPrice, Integer page,
 		Integer size,
 		Double userLongitude, Double userLatitude) {
-		this.foodTypeName = foodTypeName;
+		this.options.foodTypeName = foodTypeName;
 		this.maxDistance = maxDistance;
 		this.maxPrice = maxPrice;
 		this.page = page;
