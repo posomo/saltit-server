@@ -1,5 +1,7 @@
 package com.posomo.saltit.repository;
 
+import static com.posomo.saltit.domain.restaurant.entity.QRestaurant.*;
+
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -7,7 +9,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
-import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
 import com.posomo.saltit.domain.restaurant.entity.QCategory;
 import com.posomo.saltit.domain.restaurant.entity.QFoodType;
@@ -15,6 +18,8 @@ import com.posomo.saltit.domain.restaurant.entity.QRestaurant;
 import com.posomo.saltit.domain.restaurant.entity.QRestaurantCategory;
 import com.posomo.saltit.domain.restaurant.entity.QRestaurantLocation;
 import com.posomo.saltit.domain.restaurant.entity.QRestaurantMenu;
+import com.posomo.saltit.repository.support.OrderByNull;
+import com.posomo.saltit.repository.support.SliceAdapter;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -25,6 +30,12 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import static com.posomo.saltit.domain.restaurant.entity.QRestaurant.restaurant;
+import static com.posomo.saltit.domain.restaurant.entity.QFoodType.foodType;
+import static com.posomo.saltit.domain.restaurant.entity.QRestaurantMenu.restaurantMenu;
+import static com.posomo.saltit.domain.restaurant.entity.QRestaurantLocation.restaurantLocation;
+import static com.posomo.saltit.domain.restaurant.entity.QRestaurantCategory.restaurantCategory;
+import static com.posomo.saltit.domain.restaurant.entity.QCategory.category;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,75 +45,60 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
 
-	QRestaurant restaurant = QRestaurant.restaurant;
-	QFoodType foodType = QFoodType.foodType;
-	QRestaurantMenu restaurantMenu = QRestaurantMenu.restaurantMenu;
-	QRestaurantLocation restaurantLocation = QRestaurantLocation.restaurantLocation;
-	QRestaurantCategory restaurantCategory = QRestaurantCategory.restaurantCategory;
-	QCategory category = QCategory.category;
-
 	@Override
-	public Slice<RestaurantSummary> searchRestaurant(RestaurantFilterRequest filterRequest) {
-		Pageable pageable = filterRequest.createPageRequest();
-		return getSummarySlice(pageable, getRestaurantSummariesNotContainSearch(filterRequest, pageable));
+	public Slice<RestaurantSummary> searchRestaurant(RestaurantSearchCondition filterRequest) {
+		Pageable pageable = filterRequest.getPageable();
+		return SliceAdapter.makeListToSlice(pageable, getRestaurantSummariesNotContainSearch(filterRequest, pageable));
 	}
 
 	@Override
 	public Slice<RestaurantSummary> searchRestaurantContainStringSearch(
-		RestaurantFilterRequest filterRequest) {
-		Pageable pageable = filterRequest.createPageRequest();
-		return getSummarySlice(pageable, getRestaurantSummariesContainSearch(filterRequest, pageable));
+		RestaurantSearchCondition filterRequest) {
+		Pageable pageable = filterRequest.getPageable();
+		return SliceAdapter.makeListToSlice(pageable, getRestaurantSummariesContainSearch(filterRequest, pageable));
 	}
 
-	private SliceImpl<RestaurantSummary> getSummarySlice(Pageable pageable,
-		List<RestaurantSummary> content) {
-		boolean hasNext = false;
-		if (content.size() > pageable.getPageSize()) {
-			content.remove(pageable.getPageSize());
-			hasNext = true;
-		}
-		return new SliceImpl<>(content, pageable, hasNext);
-	}
-
-	private List<RestaurantSummary> getRestaurantSummariesNotContainSearch(RestaurantFilterRequest filterRequest,
+	private List<RestaurantSummary> getRestaurantSummariesNotContainSearch(RestaurantSearchCondition filterRequest,
 		Pageable pageable) {
 
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(filterRequest, pageable)
 			.groupBy(restaurant.id);
 
-		addOrderStandard(filterRequest, restaurantSummaryJPAQuery);
+		restaurantSummaryJPAQuery.orderBy(
+			addOrderStandard(filterRequest.getSort(), filterRequest.getMySqlPoint()));
 		return restaurantSummaryJPAQuery
 			.fetch();
 	}
 
-	private List<RestaurantSummary> getRestaurantSummariesContainSearch(RestaurantFilterRequest filterRequest,
+	private List<RestaurantSummary> getRestaurantSummariesContainSearch(RestaurantSearchCondition filterRequest,
 		Pageable pageable) {
 
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(filterRequest, pageable)
 			.leftJoin(restaurant.categories, restaurantCategory)
 			.leftJoin(restaurantCategory.category, category)
-			.where(category.name.like("%" + filterRequest.getOptions().getSearch() + "%")
-				.or(restaurantMenu.name.like("%" + filterRequest.getOptions().getSearch() + "%"))
-				.or(restaurant.name.like("%" + filterRequest.getOptions().getSearch() + "%")))
+			.where(category.name.like("%" + filterRequest.getSearch() + "%")
+				.or(restaurantMenu.name.like("%" + filterRequest.getSearch() + "%"))
+				.or(restaurant.name.like("%" + filterRequest.getSearch() + "%")))
 			.groupBy(restaurant.id);
 
-		addOrderStandard(filterRequest, restaurantSummaryJPAQuery);
+		restaurantSummaryJPAQuery.orderBy(
+			addOrderStandard(filterRequest.getSort(), filterRequest.getMySqlPoint()));
 		return restaurantSummaryJPAQuery
 			.fetch();
 	}
 
-	private JPAQuery<RestaurantSummary> defaultJpaQuery(RestaurantFilterRequest filterRequest, Pageable pageable) {
+	private JPAQuery<RestaurantSummary> defaultJpaQuery(RestaurantSearchCondition filterRequest, Pageable pageable) {
 		return jpaQueryFactory
 			.select(getRestaurantSummaryConstructorExpression(restaurant, foodType, restaurantMenu,
-				getDoubleDistanceExpression(filterRequest.computeMySqlPoint())))
+				getDoubleDistanceExpression(filterRequest.getMySqlPoint())))
 			.from(restaurant)
 			.innerJoin(restaurant.menus, restaurantMenu)
 			.innerJoin(restaurant.location, restaurantLocation)
 			.innerJoin(restaurant.foodType, foodType)
 			.where(restaurantMenu.price.loe(filterRequest.getMaxPrice()))
-			.where(foodTypeNameEq(filterRequest.getOptions().getFoodTypeName()))
+			.where(foodTypeNameEq(filterRequest.getFoodTypeName()))
 			.where(
-				withInByDistance(restaurantLocation, filterRequest.computeMySqlPoint(), filterRequest.getMaxDistance()))
+				withInByDistance(restaurantLocation, filterRequest.getMySqlPoint(), filterRequest.getMaxDistance()))
 			.where(restaurantMenu.mainMenu.eq(true))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1);
@@ -157,14 +153,14 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 				restaurantLocation.location);
 	}
 
+	private OrderSpecifier addOrderStandard(String orderBy, String pointString) {
 
-	private void addOrderStandard(RestaurantFilterRequest filterRequest,
-		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery) {
-		if (filterRequest.getOptions().getSort() == null || !filterRequest.getOptions().getSort().equals("거리순")) {
-			// default 별점순
-			restaurantSummaryJPAQuery.orderBy(restaurant.score.desc());
+		if (orderBy == null) {
+			return OrderByNull.DEFAULT;
+		} else if (orderBy.equals("거리순")) {
+			return getDoubleDistanceExpression(pointString).asc();
 		} else {
-			restaurantSummaryJPAQuery.orderBy(getDoubleDistanceExpression(filterRequest.computeMySqlPoint()).asc());
+			return restaurant.score.desc();
 		}
 	}
 }

@@ -1,12 +1,11 @@
 package com.posomo.saltit.service;
 
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
-import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummaryResponse;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.repository.RestaurantRepository;
@@ -22,12 +21,15 @@ public class RestaurantServiceV2 implements RestaurantService {
 
 	@Override
 	public RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest) {
-		if (filterRequest.getOptions().getSearch() == null) {
+
+		RestaurantSearchCondition searchDto = new RestaurantSearchCondition(filterRequest);
+
+		if (searchDto.getSearch() == null) {
 			return RestaurantSummaryResponse.ofSummary(
-				restaurantRepository.searchRestaurant(filterRequest));
+				restaurantRepository.searchRestaurant(searchDto));
 		}
 		return RestaurantSummaryResponse.ofSummary(
-			restaurantRepository.searchRestaurantContainStringSearch(filterRequest));
+			restaurantRepository.searchRestaurantContainStringSearch(searchDto));
 	}
 
 	@Override

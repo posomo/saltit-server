@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 
 import com.posomo.saltit.TestConfig;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
 import com.posomo.saltit.domain.restaurant.entity.FoodType;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
@@ -83,8 +84,8 @@ class RestaurantRepositoryImplTest {
 
 		// when
 		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurant(
-			new RestaurantFilterRequest("한식", 10.0, 1000000, 0, 100,
-				12.0521, 37.5033)
+			new RestaurantSearchCondition(new RestaurantFilterRequest("한식", 10.0, 1000000, 0, 100,
+				12.0521, 37.5033))
 		).getContent();
 
 		// then
@@ -104,8 +105,8 @@ class RestaurantRepositoryImplTest {
 
 		// when
 		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurant(
-			new RestaurantFilterRequest("한식", 10000.0, 1000000, 0, 100,
-				10.0, 10.0)
+			new RestaurantSearchCondition(new RestaurantFilterRequest("한식", 10000.0, 1000000, 0, 100,
+				10.0, 10.0))
 		).getContent();
 
 		// then
@@ -125,8 +126,8 @@ class RestaurantRepositoryImplTest {
 
 		// when
 		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurantContainStringSearch(
-			new RestaurantFilterRequest(1000.0, 1000000, 0, 100,
-				12.0521, 37.5033, new RestaurantFilterRequest.Options("테스트", null, "한식"))
+			new RestaurantSearchCondition(new RestaurantFilterRequest(1000.0, 1000000, 0, 100,
+				12.0521, 37.5033, new RestaurantFilterRequest.Options("테스트", null, "한식")))
 		).getContent();
 
 		// then
@@ -146,8 +147,9 @@ class RestaurantRepositoryImplTest {
 
 		// when
 		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurantContainStringSearch(
-			new RestaurantFilterRequest(1000.0, 1000000, 0, 100,
+			new RestaurantSearchCondition(new RestaurantFilterRequest(1000.0, 1000000, 0, 100,
 				12.0521, 37.5033, new RestaurantFilterRequest.Options("양념치킨", null, "한식"))
+			)
 		).getContent();
 
 		// then
