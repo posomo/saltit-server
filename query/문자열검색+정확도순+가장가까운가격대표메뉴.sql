@@ -3,7 +3,7 @@ select temp.id,
        temp.restaurant_name,
        score,
        price,
-       count(temp.id),
+       count,
        name,
        food_type_name,
        latitude,
@@ -18,7 +18,8 @@ from restaurant_menu
                       ST_Y(l1_0.location)                                 AS longitude,
                       r1_0.id,
                       st_distance_sphere(l1_0.location, st_pointfromtext('POINT(37.6033 127.0521)', 4326)) as distance,
-                      min(10000 - m1_0.price) over (partition by r1_0.id) as price_difference
+                      min(10000 - m1_0.price) over (partition by r1_0.id) as price_difference,
+                       count(r1_0.id) over (partition by r1_0.id) as count
                from restaurant r1_0
                         join restaurant_menu m1_0 on r1_0.id = m1_0.restaurant_id
                         join restaurant_location l1_0 on r1_0.id = l1_0.restaurant_id
