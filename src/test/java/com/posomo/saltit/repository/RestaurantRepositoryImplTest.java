@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 
 import com.posomo.saltit.TestConfig;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
 import com.posomo.saltit.domain.restaurant.entity.FoodType;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
@@ -82,9 +83,9 @@ class RestaurantRepositoryImplTest {
 		Restaurant restaurant = makeRestaurant();
 
 		// when
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
-			new RestaurantFilterRequest("한식", 10.0, 1000000, 0, 100,
-				12.0521, 37.5033)
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurant(
+			new RestaurantSearchCondition(new RestaurantFilterRequest("한식", 10.0, 1000000, 0, 100,
+				12.0521, 37.5033))
 		).getContent();
 
 		// then
@@ -103,9 +104,9 @@ class RestaurantRepositoryImplTest {
 		Restaurant restaurant = makeRestaurant();
 
 		// when
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
-			new RestaurantFilterRequest("한식", 10000.0, 1000000, 0, 100,
-				10.0, 10.0)
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurant(
+			new RestaurantSearchCondition(new RestaurantFilterRequest("한식", 10000.0, 1000000, 0, 100,
+				10.0, 10.0))
 		).getContent();
 
 		// then
@@ -124,9 +125,9 @@ class RestaurantRepositoryImplTest {
 		Restaurant restaurant = makeRestaurant();
 
 		// when
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
-			new RestaurantFilterRequest("한식", 1000.0, 1000000, 0, 100,
-				12.0521, 37.5033, new RestaurantFilterRequest.Options("테스트", null))
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurantContainStringSearch(
+			new RestaurantSearchCondition(new RestaurantFilterRequest(1000.0, 1000000, 0, 100,
+				12.0521, 37.5033, new RestaurantFilterRequest.Options("테스트", null, "한식")))
 		).getContent();
 
 		// then
@@ -145,9 +146,10 @@ class RestaurantRepositoryImplTest {
 		Restaurant restaurant = makeRestaurant();
 
 		// when
-		List<RestaurantSummary> restaurantSummaries = restaurantRepository.findRestaurantByFilterRequest(
-			new RestaurantFilterRequest("한식", 1000.0, 1000000, 0, 100,
-				12.0521, 37.5033, new RestaurantFilterRequest.Options("양념치킨", null))
+		List<RestaurantSummary> restaurantSummaries = restaurantRepository.searchRestaurantContainStringSearch(
+			new RestaurantSearchCondition(new RestaurantFilterRequest(1000.0, 1000000, 0, 100,
+				12.0521, 37.5033, new RestaurantFilterRequest.Options("양념치킨", null, "한식"))
+			)
 		).getContent();
 
 		// then
