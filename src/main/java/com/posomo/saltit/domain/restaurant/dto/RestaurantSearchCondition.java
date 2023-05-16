@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 
 import lombok.Data;
 
-@Data(staticConstructor = "of")
+@Data
 public class RestaurantSearchCondition {
 
 	private Double maxDistance;
