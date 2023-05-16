@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +19,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
+import com.posomo.saltit.domain.restaurant.entity.Category;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
+import com.posomo.saltit.domain.restaurant.entity.RestaurantCategory;
+import com.posomo.saltit.domain.restaurant.entity.RestaurantLocation;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantMenu;
 import com.posomo.saltit.repository.RestaurantRepository;
-
 
 @ExtendWith(MockitoExtension.class)
 class RestaurantServiceV1Test {
@@ -50,6 +53,12 @@ class RestaurantServiceV1Test {
 			menus.add(RestaurantMenu.builder().id(4L).name("sideMenu1").price(2000).mainMenu(false).build());
 			menus.add(RestaurantMenu.builder().id(5L).name("sideMenu2").price(1000).mainMenu(false).build());
 			Restaurant restaurant = Restaurant.builder().id(1L).name("테스트 식당").score(100).menus(menus).build();
+			restaurant.setPhone("phone");
+			restaurant.setLocation(new RestaurantLocation(1L, restaurant, "address", null));
+			restaurant.setCategories(Arrays.asList(
+				new RestaurantCategory(1L, restaurant, new Category(1L, "한식")),
+				new RestaurantCategory(2L, restaurant, new Category(1L, "양식"))
+			));
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
@@ -61,6 +70,10 @@ class RestaurantServiceV1Test {
 			assertThat(restaurantDetail.getTotalMenuCount()).isEqualTo(5);
 			assertThat(restaurantDetail.getMain().getCount()).isEqualTo(3);
 			assertThat(restaurantDetail.getSide().getCount()).isEqualTo(2);
+			assertThat(restaurantDetail.getPhone()).isEqualTo("phone");
+			assertThat(restaurantDetail.getAddress()).isEqualTo("address");
+			assertThat(restaurantDetail.getCategories()).hasSize(2);
+
 
 			RestaurantDetailResponse.Classification.Menu mainMenu1 = restaurantDetail.getMain().getMenus()
 				.stream()
@@ -79,6 +92,10 @@ class RestaurantServiceV1Test {
 			assertThat(sideMenu1.getId()).isEqualTo(4L);
 			assertThat(sideMenu1.getName()).isEqualTo("sideMenu1");
 			assertThat(sideMenu1.getPrice()).isEqualTo(2000);
+
+			assertThat(restaurantDetail.getCategories().stream().filter(category -> category.equals("한식")).toList()).hasSize(1);
+			assertThat(restaurantDetail.getCategories().stream().filter(category -> category.equals("양식")).toList()).hasSize(1);
+
 		}
 
 		@Test
@@ -87,6 +104,12 @@ class RestaurantServiceV1Test {
 			//given
 			List<RestaurantMenu> menus = new ArrayList<>();
 			Restaurant restaurant = Restaurant.builder().id(1L).name("테스트 식당").score(100).menus(menus).build();
+			restaurant.setPhone("phone");
+			restaurant.setLocation(new RestaurantLocation(1L, restaurant, "address", null));
+			restaurant.setCategories(Arrays.asList(
+				new RestaurantCategory(1L, restaurant, new Category(1L, "한식")),
+				new RestaurantCategory(2L, restaurant, new Category(1L, "양식"))
+			));
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
