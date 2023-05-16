@@ -29,7 +29,9 @@ public class RestaurantServiceV2 implements RestaurantService {
 
 	@Override
 	public RestaurantDetailResponse getRestaurantDetail(long restaurantId) {
-		Restaurant restaurant = restaurantRepository.findByIdWithMenus(restaurantId).orElseThrow(NoRecordException::new);
-		return RestaurantDetailResponse.of(restaurant);
+		Restaurant restaurantWithMenus = restaurantRepository.findByIdWithMenus(restaurantId).orElseThrow(NoRecordException::new);
+		Restaurant restaurantWithCategories = restaurantRepository.findByIdWithCategories(restaurantId).orElseThrow(NoRecordException::new);
+		restaurantWithMenus.setCategories(restaurantWithCategories.getCategories());
+		return RestaurantDetailResponse.of(restaurantWithMenus);
 	}
 }

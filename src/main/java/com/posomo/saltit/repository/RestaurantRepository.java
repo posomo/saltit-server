@@ -28,6 +28,24 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>,
                                            @Param(value = "maxDistance")Double maxDistance,
                                            Pageable pageable);
 
-    @Query(value = "select r from Restaurant r left join fetch r.menus left join fetch r.information left join fetch r.location where r.id=:id")
+    @Query(value = """
+			select r
+			from Restaurant r
+			left join fetch r.menus m
+			left join fetch r.information
+			left join fetch r.location
+			where r.id=:id
+		""")
     Optional<Restaurant> findByIdWithMenus(@Param(value = "id") long id);
+
+    @Query("""
+			SELECT r
+			FROM Restaurant r
+			LEFT JOIN FETCH r.categories c
+			LEFT JOIN FETCH c.category
+			LEFT JOIN FETCH r.information
+			LEFT JOIN FETCH r.location
+			WHERE r.id = :id
+		""")
+    Optional<Restaurant> findByIdWithCategories(@Param(value = "id") long id);
 }
