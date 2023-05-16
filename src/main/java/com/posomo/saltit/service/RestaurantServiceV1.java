@@ -19,7 +19,7 @@ public class RestaurantServiceV1 implements RestaurantService {
 	private final RestaurantRepository restaurantRepository;
 
 	@Override
-	public RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest) {
+	public RestaurantSummaryResponse searchRestaurantSummaries(RestaurantFilterRequest filterRequest) {
 		Slice<Object[]> resultObjects = restaurantRepository.findRestaurantByFilter(
 			filterRequest.getMaxPrice(),
 			filterRequest.getOptions().getFoodTypeName(),

@@ -1,27 +1,16 @@
 package com.posomo.saltit.repository;
 
-import static com.posomo.saltit.domain.restaurant.entity.QRestaurant.*;
-
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
-import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
-import com.posomo.saltit.domain.restaurant.entity.QCategory;
-import com.posomo.saltit.domain.restaurant.entity.QFoodType;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurant;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurantCategory;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurantLocation;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurantMenu;
 import com.posomo.saltit.repository.support.OrderByNull;
 import com.posomo.saltit.repository.support.SliceAdapter;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -78,9 +67,9 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(searchCondition, pageable)
 			.leftJoin(restaurant.categories, restaurantCategory)
 			.leftJoin(restaurantCategory.category, category)
-			.where(category.name.like("%" + searchCondition.getSearch() + "%")
-				.or(restaurantMenu.name.like("%" + searchCondition.getSearch() + "%"))
-				.or(restaurant.name.like("%" + searchCondition.getSearch() + "%")))
+			.where(category.name.like("%" + searchCondition.getSearchString() + "%")
+				.or(restaurantMenu.name.like("%" + searchCondition.getSearchString() + "%"))
+				.or(restaurant.name.like("%" + searchCondition.getSearchString() + "%")))
 			.groupBy(restaurant.id);
 
 		restaurantSummaryJPAQuery.orderBy(

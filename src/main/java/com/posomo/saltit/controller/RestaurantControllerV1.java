@@ -21,7 +21,7 @@ public class RestaurantControllerV1 implements RestaurantControllerV1Swagger, Re
 
 	@Override
 	public RestaurantSummaryResponse getRestaurantSummaries(@Validated @RequestBody RestaurantFilterRequest filterRequest) {
-		return restaurantService.getRestaurantSummaries(filterRequest);
+		return restaurantService.searchRestaurantSummaries(filterRequest);
 	}
 
 	@Override

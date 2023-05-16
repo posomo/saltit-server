@@ -20,11 +20,11 @@ public class RestaurantServiceV2 implements RestaurantService {
 	private final RestaurantRepository restaurantRepository;
 
 	@Override
-	public RestaurantSummaryResponse getRestaurantSummaries(RestaurantFilterRequest filterRequest) {
+	public RestaurantSummaryResponse searchRestaurantSummaries(RestaurantFilterRequest filterRequest) {
 
 		RestaurantSearchCondition searchDto = new RestaurantSearchCondition(filterRequest);
 
-		if (searchDto.getSearch() == null) {
+		if (searchDto.getSearchString() == null) {
 			return RestaurantSummaryResponse.ofSummary(
 				restaurantRepository.searchRestaurant(searchDto));
 		}

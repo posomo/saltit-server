@@ -1,5 +1,3 @@
--- 중요! 가격의 경우는 order by를 바깥에 명시하도록 한다.
-
 select temp.id,
        title_image_url,
        temp.restaurant_name,
