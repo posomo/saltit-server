@@ -44,7 +44,9 @@ class RestaurantControllerV1Test {
 
 		RestaurantDetailResponse.Classification main = new RestaurantDetailResponse.Classification(3, mainMenus);
 		RestaurantDetailResponse.Classification side = new RestaurantDetailResponse.Classification(2, sideMenus);
-		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, "testUrl", 5, "test store", 100, main, side);
+		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, "testUrl", 5, "test store", 100, "phone", "address", new ArrayList<>(), main, side);
+
+
 		when(restaurantService.getRestaurantDetail(1L)).thenReturn(restaurantDetailResponse);
 		when(restaurantService.getRestaurantDetail(2L)).thenThrow(new NoRecordException(String.format("restaurantId = %d record not found", 2L)));
 	}
@@ -60,6 +62,8 @@ class RestaurantControllerV1Test {
 				.andExpect(jsonPath("$.totalMenuCount").value(5))
 				.andExpect(jsonPath("$.id").value(1L))
 				.andExpect(jsonPath("$.rating").value(100))
+				.andExpect(jsonPath("$.phone").value("phone"))
+				.andExpect(jsonPath("$.address").value("address"))
 				.andExpect(jsonPath("$.main.count").value(3))
 				.andExpect(jsonPath("$.side.count").value(2));
 		}
