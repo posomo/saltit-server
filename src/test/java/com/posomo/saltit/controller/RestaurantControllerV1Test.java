@@ -44,7 +44,8 @@ class RestaurantControllerV1Test {
 
 		RestaurantDetailResponse.Classification main = new RestaurantDetailResponse.Classification(3, mainMenus);
 		RestaurantDetailResponse.Classification side = new RestaurantDetailResponse.Classification(2, sideMenus);
-		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, "testUrl", 5, "test store", 100, "phone", "address", new ArrayList<>(), main, side);
+		RestaurantDetailResponse restaurantDetailResponse = new RestaurantDetailResponse(1L, "testUrl",
+						5, "test store", 100, "phone", "address", new ArrayList<>(), main, side,"testImageUrl");
 
 
 		when(restaurantService.getRestaurantDetail(1L)).thenReturn(restaurantDetailResponse);
