@@ -46,6 +46,9 @@ public class RestaurantDetailResponse {
 
 	@Schema(description = "사이드 메뉴")
 	private Classification side;
+
+	@Schema(description = "식당 사진 URL")
+	private String titleImageUrl;
 	public static RestaurantDetailResponse of(Restaurant restaurant) {
 		Long id = restaurant.getId();
 
@@ -73,7 +76,10 @@ public class RestaurantDetailResponse {
 			.toList();
 		Classification side = Classification.of(sideMenus);
 
-		return new RestaurantDetailResponse(id, diningcodeUrl, totalMenuCount, name, rating, phone, address, categories, main, side);
+		String titleImageUrl = restaurant.getTitleImageUrl();
+
+		return new RestaurantDetailResponse(id, diningcodeUrl, totalMenuCount, name, rating, phone, address, categories, main, side
+		,titleImageUrl);
 	}
 
 	@AllArgsConstructor
