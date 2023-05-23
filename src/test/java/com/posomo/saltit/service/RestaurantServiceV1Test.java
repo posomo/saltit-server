@@ -65,6 +65,7 @@ class RestaurantServiceV1Test {
 				new RestaurantCategory(2L, restaurant, new Category(1L, "양식"))
 			));
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
+			when(restaurantRepository.findByIdWithCategories(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
 			RestaurantDetailResponse restaurantDetail = restaurantService.getRestaurantDetail(1L);
@@ -116,6 +117,7 @@ class RestaurantServiceV1Test {
 				new RestaurantCategory(2L, restaurant, new Category(1L, "양식"))
 			));
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
+			when(restaurantRepository.findByIdWithCategories(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
 			RestaurantDetailResponse restaurantDetail = restaurantService.getRestaurantDetail(1L);
