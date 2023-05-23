@@ -2,9 +2,13 @@ package com.posomo.saltit.domain.restaurant.dto;
 
 import org.springframework.data.domain.Pageable;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class RestaurantSearchCondition {
 
 	private Double maxDistance;

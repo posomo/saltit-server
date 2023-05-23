@@ -27,7 +27,8 @@ from restaurant_menu
                where m1_0.price <= 10000
                  and f1_0.name = '한식'
                  and main_menu = true
-                 and st_within(l1_0.location, getdistancembr(st_pointfromtext('POINT(37.6033 127.0521)', 4326), 1))
+                 and st_within(l1_0.location, getdistancembr(st_pointfromtext('POINT(37.6033 127.0521)', 4326), 0.7))
+               order by distance
 
 ) as temp
               on temp.id = restaurant_menu.restaurant_id and temp.price_difference = (10000 - restaurant_menu.price)

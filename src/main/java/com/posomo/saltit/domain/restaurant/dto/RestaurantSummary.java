@@ -33,7 +33,7 @@ public class RestaurantSummary {
 	private String categoryName;
 
 	@Schema(description = "가격 내에 메뉴 갯수", example = "5")
-	private Long menuSize;
+	private Integer menuSize;
 
 	@Schema(description = "경도 값", example = "127.0502")
 	private Double longitude;
