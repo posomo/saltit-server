@@ -154,6 +154,21 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			restaurantLocation.location, userPoint, distance);
 	}
 
+	private OrderSpecifier addOrderStandard(String orderBy, String pointString, String searchString) {
+
+		if (orderBy == null) {
+			return OrderByNull.DEFAULT;
+		} else if (orderBy.equals("거리순")) {
+			return getDistanceExpression(pointString).asc();
+		} else if (orderBy.equals("정확도순") && searchString != null) {
+			return getAccurateExpression(searchString);
+		} else if (orderBy.equals("별점순")) {
+			return restaurant.score.desc();
+		}
+		return OrderByNull.DEFAULT;
+
+	}
+
 	private NumberExpression<Double> getDistanceExpression(String point) {
 		return Expressions
 			.numberTemplate(Double.class,
@@ -173,21 +188,6 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			.numberTemplate(Double.class,
 				"ST_Y({0}) AS longitude",
 				restaurantLocation.location);
-	}
-
-	private OrderSpecifier addOrderStandard(String orderBy, String pointString, String searchString) {
-
-		if (orderBy == null) {
-			return OrderByNull.DEFAULT;
-		} else if (orderBy.equals("거리순")) {
-			return getDistanceExpression(pointString).asc();
-		} else if (orderBy.equals("정확도순")) {
-			if(searchString == null)
-				return OrderByNull.DEFAULT;
-			return getAccurateExpression(searchString);
-		} else {
-			return restaurant.score.desc();
-		}
 	}
 
 	private OrderSpecifier<Integer> getAccurateExpression(String searchString) {
