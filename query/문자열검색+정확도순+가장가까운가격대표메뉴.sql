@@ -10,16 +10,16 @@ select temp.id,
        longitude,
        distance
 from restaurant_menu
-         join (select r1_0.name                                           as restaurant_name,
+         join (select r1_0.name                                                                            as restaurant_name,
                       r1_0.score,
                       r1_0.title_image_url,
-                      f1_0.name                                           as food_type_name,
-                      ST_X(l1_0.location)                                 AS latitude,
-                      ST_Y(l1_0.location)                                 AS longitude,
+                      f1_0.name                                                                            as food_type_name,
+                      ST_X(l1_0.location)                                                                  AS latitude,
+                      ST_Y(l1_0.location)                                                                  AS longitude,
                       r1_0.id,
                       st_distance_sphere(l1_0.location, st_pointfromtext('POINT(37.6033 127.0521)', 4326)) as distance,
-                      min(10000 - m1_0.price) over (partition by r1_0.id) as price_difference,
-                       count(r1_0.id) over (partition by r1_0.id) as count
+                      min(10000 - m1_0.price) over (partition by r1_0.id)                                  as price_difference,
+                      count(r1_0.id) over (partition by r1_0.id)                                           as count
                from restaurant r1_0
                         join restaurant_menu m1_0 on r1_0.id = m1_0.restaurant_id
                         join restaurant_location l1_0 on r1_0.id = l1_0.restaurant_id
@@ -50,4 +50,4 @@ from restaurant_menu
                             END) as temp
               on temp.id = restaurant_menu.restaurant_id and temp.price_difference = (10000 - restaurant_menu.price)
 group by temp.id
-    limit 0,1000;
+limit 0,1000;

@@ -2,9 +2,13 @@ package com.posomo.saltit.domain.restaurant.dto;
 
 import org.springframework.data.domain.Pageable;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class RestaurantSearchCondition {
 
 	private Double maxDistance;
@@ -15,7 +19,7 @@ public class RestaurantSearchCondition {
 
 	private String mySqlPoint;
 
-	private String search;
+	private String searchString;
 
 	private String sort;
 
@@ -26,7 +30,7 @@ public class RestaurantSearchCondition {
 		this.maxPrice = filterRequest.getMaxPrice();
 		this.pageable = filterRequest.createPageRequest();
 		this.mySqlPoint = filterRequest.computeMySqlPoint();
-		this.search = filterRequest.getOptions().getSearch();
+		this.searchString = filterRequest.getOptions().getSearch();
 		this.sort = filterRequest.getOptions().getSort();
 		this.foodTypeName = filterRequest.getOptions().getFoodTypeName();
 	}

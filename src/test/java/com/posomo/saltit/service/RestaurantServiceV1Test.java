@@ -16,9 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import com.posomo.saltit.domain.exception.NoRecordException;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantDetailResponse;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantFilterRequest;
+import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
 import com.posomo.saltit.domain.restaurant.entity.Category;
 import com.posomo.saltit.domain.restaurant.entity.Restaurant;
 import com.posomo.saltit.domain.restaurant.entity.RestaurantCategory;
@@ -60,6 +65,7 @@ class RestaurantServiceV1Test {
 				new RestaurantCategory(2L, restaurant, new Category(1L, "양식"))
 			));
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
+			when(restaurantRepository.findByIdWithCategories(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
 			RestaurantDetailResponse restaurantDetail = restaurantService.getRestaurantDetail(1L);
@@ -111,6 +117,7 @@ class RestaurantServiceV1Test {
 				new RestaurantCategory(2L, restaurant, new Category(1L, "양식"))
 			));
 			when(restaurantRepository.findByIdWithMenus(1L)).thenReturn(Optional.of(restaurant));
+			when(restaurantRepository.findByIdWithCategories(1L)).thenReturn(Optional.of(restaurant));
 
 			//when
 			RestaurantDetailResponse restaurantDetail = restaurantService.getRestaurantDetail(1L);
@@ -132,5 +139,47 @@ class RestaurantServiceV1Test {
 			// //then
 			assertThrows(NoRecordException.class, () -> restaurantService.getRestaurantDetail(1L));
 		}
+	}
+
+	@Nested
+	@DisplayName("식당 필터 검색 서비스")
+	class searchRestaurantSummaries {
+		private Slice<RestaurantSummary> someRestaurantData() {
+			return new SliceImpl<>(new ArrayList<>(), PageRequest.of(0, 1), false);
+		}
+
+		@Test
+		@DisplayName("식당 필터 검색 서비스 : StringSearch 포함")
+		void ok() {
+			// Given
+			RestaurantFilterRequest mockFilterRequest = mock(RestaurantFilterRequest.class);
+			RestaurantFilterRequest.Options mockOptions = mock(RestaurantFilterRequest.Options.class);
+			when(mockFilterRequest.getOptions()).thenReturn(mockOptions);
+
+			when(restaurantRepository.searchRestaurant(any())).thenReturn(someRestaurantData());
+			// When
+			restaurantService.searchRestaurantSummaries(mockFilterRequest);
+
+			// Then
+			verify(restaurantRepository).searchRestaurant(any());
+		}
+
+		@Test
+		@DisplayName("식당 필터 검색 서비스 : StringSearch 포함하지 않는 경우")
+		void edge1() {
+			//given
+			RestaurantFilterRequest mockFilterRequest = mock(RestaurantFilterRequest.class);
+			RestaurantFilterRequest.Options mockOptions = mock(RestaurantFilterRequest.Options.class);
+			when(mockOptions.getSearch()).thenReturn("테스트");
+			when(mockFilterRequest.getOptions()).thenReturn(mockOptions);
+
+			when(restaurantRepository.searchRestaurantContainStringSearch(any())).thenReturn(someRestaurantData());
+			// When
+			restaurantService.searchRestaurantSummaries(mockFilterRequest);
+
+			// Then
+			verify(restaurantRepository).searchRestaurantContainStringSearch(any());
+		}
+
 	}
 }

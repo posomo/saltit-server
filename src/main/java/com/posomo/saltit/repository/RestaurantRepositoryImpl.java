@@ -1,33 +1,25 @@
 package com.posomo.saltit.repository;
 
-import static com.posomo.saltit.domain.restaurant.entity.QRestaurant.*;
-
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
-import com.posomo.saltit.domain.restaurant.dto.RestaurantSearchCondition;
 import com.posomo.saltit.domain.restaurant.dto.RestaurantSummary;
-import com.posomo.saltit.domain.restaurant.entity.QCategory;
-import com.posomo.saltit.domain.restaurant.entity.QFoodType;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurant;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurantCategory;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurantLocation;
-import com.posomo.saltit.domain.restaurant.entity.QRestaurantMenu;
 import com.posomo.saltit.repository.support.OrderByNull;
 import com.posomo.saltit.repository.support.SliceAdapter;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Order;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -63,63 +55,92 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 	private List<RestaurantSummary> getRestaurantSummariesNotContainSearch(RestaurantSearchCondition searchCondition,
 		Pageable pageable) {
 
-		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(searchCondition, pageable)
-			.groupBy(restaurant.id);
-
-		restaurantSummaryJPAQuery.orderBy(
-			addOrderStandard(searchCondition.getSort(), searchCondition.getMySqlPoint()));
-		return restaurantSummaryJPAQuery
-			.fetch();
-	}
-
-	private List<RestaurantSummary> getRestaurantSummariesContainSearch(RestaurantSearchCondition searchCondition,
-		Pageable pageable) {
-
-		JPAQuery<RestaurantSummary> restaurantSummaryJPAQuery = defaultJpaQuery(searchCondition, pageable)
-			.leftJoin(restaurant.categories, restaurantCategory)
-			.leftJoin(restaurantCategory.category, category)
-			.where(category.name.like("%" + searchCondition.getSearch() + "%")
-				.or(restaurantMenu.name.like("%" + searchCondition.getSearch() + "%"))
-				.or(restaurant.name.like("%" + searchCondition.getSearch() + "%")))
-			.groupBy(restaurant.id);
-
-		restaurantSummaryJPAQuery.orderBy(
-			addOrderStandard(searchCondition.getSort(), searchCondition.getMySqlPoint()));
-		return restaurantSummaryJPAQuery
-			.fetch();
-	}
-
-	private JPAQuery<RestaurantSummary> defaultJpaQuery(RestaurantSearchCondition searchCondition, Pageable pageable) {
-		return jpaQueryFactory
-			.select(
-				getRestaurantSummaryConstructorExpression(getDoubleDistanceExpression(searchCondition.getMySqlPoint())))
+		return jpaQueryFactory.select(Projections.constructor(RestaurantSummary.class,
+				restaurant.id,
+				restaurant.titleImageUrl,
+				restaurant.name,
+				restaurant.score,
+				restaurantMenu.price,
+				restaurantMenu.name,
+				foodType.name,
+				getCountExpression(),
+				getLongitudeExpression(),
+				getLatitudeExpression(),
+				getDistanceExpression(searchCondition.getMySqlPoint())
+			))
 			.from(restaurant)
 			.innerJoin(restaurant.menus, restaurantMenu)
 			.innerJoin(restaurant.location, restaurantLocation)
 			.innerJoin(restaurant.foodType, foodType)
-			.where(restaurantMenu.price.loe(searchCondition.getMaxPrice()))
-			.where(foodTypeNameEq(searchCondition.getFoodTypeName()))
-			.where(
-				withInByDistance(searchCondition.getMySqlPoint(), searchCondition.getMaxDistance()))
-			.where(restaurantMenu.mainMenu.eq(true))
+			.where(restaurantMenu.price.loe(searchCondition.getMaxPrice()),
+				foodTypeNameEq(searchCondition.getFoodTypeName()),
+				restaurantMenu.mainMenu.eq(true),
+				withInByDistance(searchCondition.getMySqlPoint(), searchCondition.getMaxDistance())
+			)
+			.groupBy(restaurant.id)
+			.orderBy(addOrderStandard(searchCondition.getSort(), searchCondition.getMySqlPoint(), searchCondition.getSearchString()))
 			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize() + 1);
+			.limit(pageable.getPageSize() + 1)
+			.fetch();
 	}
 
-	private ConstructorExpression<RestaurantSummary> getRestaurantSummaryConstructorExpression(
-		NumberExpression<Double> numberExpression) {
-		return Projections.constructor(RestaurantSummary.class,
-			restaurant.id,
-			restaurant.titleImageUrl,
-			restaurant.name,
-			restaurant.score,
-			restaurantMenu.price,
-			restaurantMenu.name,
-			foodType.name,
-			restaurant.id.count(),
-			getLongitudeExpression(),
-			getLatitudeExpression(),
-			numberExpression);
+
+	private List<RestaurantSummary> getRestaurantSummariesContainSearch(RestaurantSearchCondition searchCondition, Pageable pageable) {
+
+		// Expression<Integer> priceDifferenceExpression = getPriceDifference();
+
+		return jpaQueryFactory.select(Projections.constructor(RestaurantSummary.class,
+				restaurant.id,
+				restaurant.titleImageUrl,
+				restaurant.name,
+				restaurant.score,
+				restaurantMenu.price,
+				restaurantMenu.name,
+				foodType.name,
+				getCountExpression(),
+				getLongitudeExpression(),
+				getLatitudeExpression(),
+				getDistanceExpression(searchCondition.getMySqlPoint())
+			))
+			.from(restaurant)
+			.innerJoin(restaurant.menus, restaurantMenu)
+			.innerJoin(restaurant.location, restaurantLocation)
+			.innerJoin(restaurant.foodType, foodType)
+			.where(restaurantMenu.price.loe(searchCondition.getMaxPrice()),
+				foodTypeNameEq(searchCondition.getFoodTypeName()),
+				restaurantMenu.mainMenu.eq(true),
+				withInByDistance(searchCondition.getMySqlPoint(), searchCondition.getMaxDistance()),
+				restaurant.id.in(
+					JPAExpressions.selectDistinct(restaurantCategory.restaurant.id)
+						.from(restaurantCategory)
+						.where(restaurantCategory.category.id.in(
+							JPAExpressions.select(category.id)
+								.from(category)
+								.where(category.name.like("%" + searchCondition.getSearchString() + "%"))
+						))
+				).or(restaurant.id.in(
+					JPAExpressions.selectDistinct(restaurantMenu.restaurant.id)
+						.from(restaurantMenu)
+						.where(restaurantMenu.name.like("%" + searchCondition.getSearchString() + "%"), restaurantMenu.price.loe(searchCondition.getMaxPrice()))
+				)).or(restaurant.name.like("%" + searchCondition.getSearchString() + "%"))
+			)
+			.groupBy(restaurant.id)
+			.orderBy(addOrderStandard(searchCondition.getSort(), searchCondition.getMySqlPoint(), searchCondition.getSearchString()))
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
+			.fetch();
+	}
+
+	private NumberExpression<Integer> getPriceDifference() {
+		return Expressions.numberTemplate(Integer.class,
+			"min(10000 - {0}) over (partition by {1})", restaurantMenu.price, restaurant.id).as("price_difference");
+	}
+
+	private Expression<Integer> getCountExpression() {
+		return Expressions.numberTemplate(Integer.class,
+			"count({0})", restaurant.id).as("count");
+		// return Expressions.numberTemplate(Integer.class,
+		// 	"count({0}) over (partition by {1})", restaurant.id, restaurant.id).as("count");
 	}
 
 	private BooleanExpression foodTypeNameEq(String foodTypeName) {
@@ -133,7 +154,22 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 			restaurantLocation.location, userPoint, distance);
 	}
 
-	private NumberExpression<Double> getDoubleDistanceExpression(String point) {
+	private OrderSpecifier addOrderStandard(String orderBy, String pointString, String searchString) {
+
+		if (orderBy == null) {
+			return OrderByNull.DEFAULT;
+		} else if (orderBy.equals("거리순")) {
+			return getDistanceExpression(pointString).asc();
+		} else if (orderBy.equals("정확도순") && searchString != null) {
+			return getAccurateExpression(searchString);
+		} else if (orderBy.equals("별점순")) {
+			return restaurant.score.desc();
+		}
+		return OrderByNull.DEFAULT;
+
+	}
+
+	private NumberExpression<Double> getDistanceExpression(String point) {
 		return Expressions
 			.numberTemplate(Double.class,
 				"ST_Distance_Sphere({0}, ST_PointFromText({1}, 4326))",
@@ -154,14 +190,24 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 				restaurantLocation.location);
 	}
 
-	private OrderSpecifier addOrderStandard(String orderBy, String pointString) {
-
-		if (orderBy == null) {
-			return OrderByNull.DEFAULT;
-		} else if (orderBy.equals("거리순")) {
-			return getDoubleDistanceExpression(pointString).asc();
-		} else {
-			return restaurant.score.desc();
-		}
+	private OrderSpecifier<Integer> getAccurateExpression(String searchString) {
+		return new CaseBuilder()
+			.when(restaurant.name.like("%" + searchString + "%")).then(1)
+			.when(restaurant.id.in(
+				JPAExpressions.selectDistinct(restaurantCategory.restaurant.id)
+					.from(restaurantCategory)
+					.where(restaurantCategory.category.id.in(
+						JPAExpressions.select(category.id)
+							.from(category)
+							.where(category.name.like("%" + searchString + "%"))
+					))
+			)).then(2)
+			.when(restaurant.id.in(
+				JPAExpressions.selectDistinct(restaurantMenu.restaurant.id)
+					.from(restaurantMenu)
+					.where(restaurantMenu.name.like("%" + searchString + "%"))
+			)).then(3)
+			.otherwise(3)
+			.asc();
 	}
 }

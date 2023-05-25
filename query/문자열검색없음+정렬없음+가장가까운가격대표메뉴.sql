@@ -27,15 +27,9 @@ from restaurant_menu
                where m1_0.price <= 10000
                  and f1_0.name = '한식'
                  and main_menu = true
-                 and st_within(l1_0.location, getdistancembr(st_pointfromtext('POINT(37.6033 127.0521)', 4326), 5))
-                 and (r1_0.id in (select distinct restaurant_id
-                   from restaurant_category
-                   where category_id in (select id from category where name like '%돼지%' escape '!'))
-                  or r1_0.id IN (SELECT DISTINCT restaurant_id
-                   FROM restaurant_menu
-                   WHERE name LIKE '%돼지%' ESCAPE '!'
-                 and price <= 10000)
-                  or r1_0.name like '%돼지%' escape '!')
+                 and st_within(l1_0.location, getdistancembr(st_pointfromtext('POINT(37.6033 127.0521)', 4326), 0.7))
+               order by distance
+
 ) as temp
               on temp.id = restaurant_menu.restaurant_id and temp.price_difference = (10000 - restaurant_menu.price)
 group by temp.id
