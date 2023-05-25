@@ -32,20 +32,39 @@ public class RestaurantDetailResponse {
 	@Schema(description = "맛집 점수(0~100)")
 	private Integer rating;
 
+	@Schema(description = "전화번호")
+	private String phone;
+
+	@Schema(description = "주소")
+	private String address;
+
+	@Schema(description = "카테고리 목록")
+	private List<String> categories;
+
 	@Schema(description = "메인 메뉴")
 	private Classification main;
 
 	@Schema(description = "사이드 메뉴")
 	private Classification side;
 
+	@Schema(description = "식당 사진 URL")
+	private String titleImageUrl;
 	public static RestaurantDetailResponse of(Restaurant restaurant) {
 		Long id = restaurant.getId();
 
-		String name = restaurant.getName();
+		String diningcodeUrl = Url.DINING_CODE_REVIEW_URL_PREFIX + restaurant.getRid();
 
 		Integer totalMenuCount = restaurant.getMenus().size();
 
+		String name = restaurant.getName();
+
 		Integer rating = restaurant.getScore();
+
+		String phone = restaurant.getPhone();
+
+		String address = restaurant.getLocation().getRoadAddress();
+
+		List<String> categories = restaurant.getCategories().stream().map(restaurantCategory -> restaurantCategory.getCategory().getName()).toList();
 
 		List<RestaurantMenu> mainMenus = restaurant.getMenus().stream()
 			.filter(RestaurantMenu::isMainMenu)
@@ -57,9 +76,10 @@ public class RestaurantDetailResponse {
 			.toList();
 		Classification side = Classification.of(sideMenus);
 
-		String diningcodeUrl = Url.DINING_CODE_REVIEW_URL_PREFIX + restaurant.getRid();
+		String titleImageUrl = restaurant.getTitleImageUrl();
 
-		return new RestaurantDetailResponse(id, diningcodeUrl, totalMenuCount, name, rating, main, side);
+		return new RestaurantDetailResponse(id, diningcodeUrl, totalMenuCount, name, rating, phone, address, categories, main, side
+		,titleImageUrl);
 	}
 
 	@AllArgsConstructor

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "레스토랑 정보")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantSummary {
 	@Schema(description = "가게 ID", example = "1")
@@ -32,8 +32,29 @@ public class RestaurantSummary {
 	@Schema(description = "식당 카테고리 이름", example = "한식")
 	private String categoryName;
 
+	@Schema(description = "가격 내에 메뉴 갯수", example = "5")
+	private Integer menuSize;
+
+	@Schema(description = "경도 값", example = "127.0502")
+	private Double longitude;
+
+	@Schema(description = "위도 값", example = "37.6033")
+	private Double latitude;
 	@Schema(description = "거리(단위 m)", example = "300")
 	private Double distance;
+
+
+	public RestaurantSummary(Long restaurantId, String titleImageUrl, String restaurantName, Integer rating,
+		Integer mainMenuPrice, String mainMenuName, String categoryName, Double distance) {
+		this.restaurantId = restaurantId;
+		this.titleImageUrl = titleImageUrl;
+		this.restaurantName = restaurantName;
+		this.rating = rating;
+		this.mainMenuPrice = mainMenuPrice;
+		this.mainMenuName = mainMenuName;
+		this.categoryName = categoryName;
+		this.distance = distance;
+	}
 
 	public static RestaurantSummary of(Object[] objects) {
 		return new RestaurantSummary(
