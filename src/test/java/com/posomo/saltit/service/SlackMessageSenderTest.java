@@ -6,14 +6,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.posomo.saltit.domain.exception.SlackMessageException;
 
+@SpringBootTest
 class SlackMessageSenderTest {
 
-	private final SlackMessageSender slackMessageSender = new SlackMessageSender();
-	private final String token = "xoxb-5318710092263-5333267537218-kMMeol6Oxqqm9gpxF1pdNqiw";
-	private final String channel = "error-log";
+	@Autowired
+	SlackMessageSender slackMessageSender;
+
 
 	@DisplayName("Slack에 메시지 보내기 테스트")
 	@Nested
@@ -21,17 +24,16 @@ class SlackMessageSenderTest {
 		@DisplayName("성공 케이스")
 		@Test
 		void ok() {
-			slackMessageSender.setToken(token);
-			Assertions.assertDoesNotThrow(() -> slackMessageSender.sendMessage(channel, "testMessage"));
+			Assertions.assertDoesNotThrow(() -> slackMessageSender.sendMessage("testMessage"));
 		}
 
 		@DisplayName("잘못된 토큰 사용")
 		@Test
 		void wrongToken() {
 			slackMessageSender.setToken("wrong_token");
-			Assertions.assertThrows(SlackMessageException.class, () -> slackMessageSender.sendMessage(channel, "wrong_token_test"));
+			Assertions.assertThrows(SlackMessageException.class, () -> slackMessageSender.sendMessage("wrong_token_test"));
 			try {
-				slackMessageSender.sendMessage(channel, "wrong_token_test");
+				slackMessageSender.sendMessage("wrong_token_test");
 			} catch (SlackMessageException e) {
 				assertThat(e.getMessage()).isEqualTo("invalid_auth");
 			}
@@ -40,7 +42,6 @@ class SlackMessageSenderTest {
 		@DisplayName("잘못된 채널로 메시지 전송")
 		@Test
 		void wrongChannel() {
-			slackMessageSender.setToken(token);
 			Assertions.assertThrows(SlackMessageException.class, () -> slackMessageSender.sendMessage("wrong_channel_test1", "wrong_channel_test"));
 			try {
 				slackMessageSender.sendMessage("wrong_channel_test1", "wrong_channel_test");
