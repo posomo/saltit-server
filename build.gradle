@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.26'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'mysql:mysql-connector-java'
+    implementation 'com.slack.api:slack-api-client:1.29.2'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

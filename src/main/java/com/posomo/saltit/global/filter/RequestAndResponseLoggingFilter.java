@@ -1,32 +1,35 @@
 package com.posomo.saltit.global.filter;
 
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.slf4j.MDC;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
+
+import com.posomo.saltit.service.MessageSender;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Component
+@RequiredArgsConstructor
 @Log4j2
 public class RequestAndResponseLoggingFilter extends OncePerRequestFilter {
 
+	private final MessageSender messageSender;
 
 	private static final List<MediaType> VISIBLE_TYPES = Arrays.asList(
 		MediaType.valueOf("text/*"),
@@ -62,13 +65,16 @@ public class RequestAndResponseLoggingFilter extends OncePerRequestFilter {
 		try {
 			beforeRequest(request, msg);
 			filterChain.doFilter(request, response);
-		}
-		finally {
+		} finally {
 			afterRequest(request, response, msg);
-			if(log.isInfoEnabled()) {
-				log.info(msg.toString());
+			String msgString = msg.toString();
+			if (log.isInfoEnabled()) {
+				log.info(msgString);
 			}
 			response.copyBodyToResponse();
+			if (response.getStatus() >= 400) {
+				messageSender.sendMessage("Transaction Id\n" + MDC.get("transactionId") + "\n\n" + msgString);
+			}
 		}
 	}
 
@@ -98,10 +104,9 @@ public class RequestAndResponseLoggingFilter extends OncePerRequestFilter {
 			.forEach(headerName ->
 				Collections.list(request.getHeaders(headerName))
 					.forEach(headerValue -> {
-						if(isSensitiveHeader(headerName)) {
+						if (isSensitiveHeader(headerName)) {
 							msg.append(String.format("%s %s: %s", prefix, headerName, "*******")).append("\n");
-						}
-						else {
+						} else {
 							msg.append(String.format("%s %s: %s", prefix, headerName, headerValue)).append("\n");
 						}
 					}));
@@ -123,10 +128,9 @@ public class RequestAndResponseLoggingFilter extends OncePerRequestFilter {
 				response.getHeaders(headerName)
 					.forEach(headerValue ->
 					{
-						if(isSensitiveHeader(headerName)) {
+						if (isSensitiveHeader(headerName)) {
 							msg.append(String.format("%s %s: %s", prefix, headerName, "*******")).append("\n");
-						}
-						else {
+						} else {
 							msg.append(String.format("%s %s: %s", prefix, headerName, headerValue)).append("\n");
 						}
 					}));
@@ -158,16 +162,16 @@ public class RequestAndResponseLoggingFilter extends OncePerRequestFilter {
 	}
 
 	private static ContentCachingRequestWrapper wrapRequest(HttpServletRequest request) {
-		if (request instanceof ContentCachingRequestWrapper) {
-			return (ContentCachingRequestWrapper) request;
+		if (request instanceof ContentCachingRequestWrapper requestWrapper) {
+			return requestWrapper;
 		} else {
 			return new ContentCachingRequestWrapper(request);
 		}
 	}
 
 	private static ContentCachingResponseWrapper wrapResponse(HttpServletResponse response) {
-		if (response instanceof ContentCachingResponseWrapper) {
-			return (ContentCachingResponseWrapper) response;
+		if (response instanceof ContentCachingResponseWrapper responseWrapper) {
+			return responseWrapper;
 		} else {
 			return new ContentCachingResponseWrapper(response);
 		}
